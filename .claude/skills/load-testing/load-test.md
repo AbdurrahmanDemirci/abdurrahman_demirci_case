@@ -15,34 +15,47 @@
 
 ```
 load_tests/
-├── locustfile.py          ← Giris noktasi (ince, senaryo icermez)
-├── config.py              ← Ortamlar, test verisi, esik degerler
+├── locustfile.py              ← Giris noktasi (ince, senaryo icermez)
+├── locust.conf                ← Varsayilan CLI parametreleri
+├── config.py                  ← Ortamlar, esik degerler, think time
+├── data/
+│   └── search_data.py         ← Tum test verisi ve assertion sabitleri
+├── utils/
+│   └── response_validator.py  ← Merkezi validasyon + P95 esik kontrolleri
 └── scenarios/
-    ├── __init__.py        ← Senaryo siniflarini kayit eder
-    ├── category_search.py ← Senaryo A: kategori sayfasina gitme
-    └── product_search.py  ← Senaryo B: urun arama → /arama?q=
+    ├── __init__.py            ← Senaryo siniflarini kayit eder
+    ├── category_search.py     ← Senaryo A: kategori sayfasina gitme   [smoke]
+    ├── product_search.py      ← Senaryo B: urun arama → /arama?q=    [smoke+regression]
+    └── user_journey.py        ← Senaryo C: sirali kullanici yolculugu
 ```
 
 **Yeni senaryo eklemek**: `scenarios/` altina yeni dosya + `__init__.py`'e 1 import satiri. Baska hicbir dosya degismez.
 
 **Yeni ortam eklemek**: `config.py`'deki `ENVIRONMENTS` dict'ine 1 satir. Komuta `LOAD_TEST_ENV=staging` ekle.
 
-**Yeni test verisi eklemek**: `config.py`'deki `CATEGORY_SLUGS` veya `SEARCH_KEYWORDS` listesine 1 satir.
+**Yeni test verisi veya assertion sabiti eklemek**: `data/search_data.py`'e 1 satir.
 
 ---
 
 ## Senaryolar
 
-### Senaryo A — CategorySearchUser
+### Senaryo A — CategorySearchUser `[smoke]`
 Kullanici arama kutusuna yazar, autocomplete'den kategori onerisi secer.
 ```
 Homepage (/) → /bilgisayar veya /telefon-ve-aksesuarlari
 ```
 
-### Senaryo B — ProductSearchUser
+### Senaryo B — ProductSearchUser `[smoke+regression]`
 Kullanici arama kutusuna urun adi yazar, direkt sonuc sayfasina gider.
+Agirlikli task'lar: popular(5) → tech(2) → edge_case(1)
 ```
 Homepage (/) → /arama?q=<keyword>
+```
+
+### Senaryo C — UserJourneyUser
+Sirayla: anasayfa → arama → sonuclari goruntule.
+```
+/ → /arama?q=<keyword> → interrupt(reschedule=True)
 ```
 
 ---
@@ -120,7 +133,8 @@ from load_tests.scenarios.product_detail import ProductDetailUser  # noqa: F401
 ## Onemli Kurallar
 
 1. **locustfile.py ince kalir** — senaryo kodu buraya girmez
-2. **config.py tek kaynak** — URL, header, test verisi buradan gelir
-3. **Her senaryo bagimsiz dosya** — tek sorumluluk prensibi
-4. **Ortam degiskeni ile calistir** — `LOAD_TEST_ENV=staging` gibi
-5. **Response validation zorunlu** — sadece status code degil, body da kontrol edilir
+2. **config.py** — ortam, esik degerleri, think time; test verisi buraya gelmez
+3. **Hardcoded string yasak** — response body'de aranan metinler (orn. hata mesajlari) `data/search_data.py`'e sabit olarak yazilir, validator dosyasinda inline string kullanilmaz
+4. **Her senaryo bagimsiz dosya** — tek sorumluluk prensibi
+5. **Ortam degiskeni ile calistir** — `LOAD_TEST_ENV=staging` gibi
+6. **Response validation merkezi** — `utils/response_validator.py` kullanilir, senaryo dosyasinda inline `if status != 200` yazilmaz
