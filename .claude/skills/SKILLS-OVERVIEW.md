@@ -47,7 +47,8 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 │   │
 │   ├── dev-ops/
 │   │   ├── commit.md                   ← /Insider-commit
-│   │   └── code-clean.md               ← /Insider-code-clean
+│   │   ├── code-clean.md               ← /Insider-code-clean
+│   │   └── ci.md                       ← /Insider-ci
 │   │
 │   └── ui-testing/                     ← Referans dokumanlari (slash komutu yok)
 │       ├── test-structure.md
@@ -63,7 +64,8 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
     ├── Insider-bug-report.md
     ├── Insider-load-test.md
     ├── Insider-code-clean.md
-    └── Insider-commit.md
+    ├── Insider-commit.md
+    └── Insider-ci.md
 ```
 
 ---
@@ -81,6 +83,7 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 | **load-test** | `/Insider-load-test` | n11.com search modulu load testini calistirir, sonuclari analiz eder |
 | **code-clean** | `/Insider-code-clean` | Commit oncesi Python format ve mimari kural kontrolu yapar, duzeltir |
 | **commit** | `/Insider-commit` | Conventional Commits formatinda degisiklikleri gruplar, commit atar, push eder |
+| **ci** | `/Insider-ci` | GitHub Actions workflow tasariminda dogru pattern uygular; dis bagimlilık, matrix, artifact ve tetikleyici konfigürasyonunu yonetir |
 
 ---
 
@@ -98,6 +101,9 @@ Commit akisi:
 
 Load test:
   load-test (bagimsiz)
+
+CI/CD:
+  ci (workflow tasarimi / yeni job ekleme)
 ```
 
 ---
