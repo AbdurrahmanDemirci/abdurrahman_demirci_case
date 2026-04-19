@@ -1,12 +1,14 @@
 .PHONY: help ui ui-chrome ui-firefox ui-all \
         ui-chrome-headless ui-firefox-headless ui-all-headless \
         ui-parallel ui-all-parallel \
+        api-test api-smoke \
         load-test load-test-smoke load-test-scale \
-        test-all report report-open clean
+        test-all report-ui report-api report-open-ui report-open-api clean
 
-ALLURE_DIR  := automation-test-results/allure-results
-REPORT_DIR  := automation-test-results/allure-report
-LOCUST_DIR  := automation-test-results/locust
+ALLURE_UI_DIR  := automation-test-results/ui/allure-results
+ALLURE_API_DIR := automation-test-results/api/allure-results
+REPORT_DIR     := automation-test-results/allure-report
+LOCUST_DIR     := automation-test-results/locust
 
 # ── default ───────────────────────────────────────────────────────────────────
 help:
@@ -42,28 +44,35 @@ help:
 ui: ui-chrome
 
 ui-chrome:
-	pytest ui_tests/tests/ --browser=chrome
+	pytest ui_tests/tests/ --browser=chrome --alluredir=$(ALLURE_UI_DIR)
 
 ui-firefox:
-	pytest ui_tests/tests/ --browser=firefox
+	pytest ui_tests/tests/ --browser=firefox --alluredir=$(ALLURE_UI_DIR)
 
 ui-all:
-	pytest ui_tests/tests/
+	pytest ui_tests/tests/ --alluredir=$(ALLURE_UI_DIR)
 
 ui-chrome-headless:
-	pytest ui_tests/tests/ --browser=chrome --headless=true
+	pytest ui_tests/tests/ --browser=chrome --headless=true --alluredir=$(ALLURE_UI_DIR)
 
 ui-firefox-headless:
-	pytest ui_tests/tests/ --browser=firefox --headless=true
+	pytest ui_tests/tests/ --browser=firefox --headless=true --alluredir=$(ALLURE_UI_DIR)
 
 ui-all-headless:
-	pytest ui_tests/tests/ --headless=true
+	pytest ui_tests/tests/ --headless=true --alluredir=$(ALLURE_UI_DIR)
 
 ui-parallel:
-	pytest ui_tests/tests/ --browser=chrome -n auto
+	pytest ui_tests/tests/ --browser=chrome -n auto --alluredir=$(ALLURE_UI_DIR)
 
 ui-all-parallel:
-	pytest ui_tests/tests/ -n auto
+	pytest ui_tests/tests/ -n auto --alluredir=$(ALLURE_UI_DIR)
+
+# ── API ───────────────────────────────────────────────────────────────────────
+api-test:
+	pytest api_tests/tests/ --alluredir=$(ALLURE_API_DIR)
+
+api-smoke:
+	pytest api_tests/tests/ -m smoke --alluredir=$(ALLURE_API_DIR)
 
 # ── Load ──────────────────────────────────────────────────────────────────────
 load-test:
@@ -85,11 +94,17 @@ test-all:
 	locust --headless --html $(LOCUST_DIR)/locust_report.html --csv $(LOCUST_DIR)/locust
 
 # ── Reports ───────────────────────────────────────────────────────────────────
-report:
-	allure generate $(ALLURE_DIR) --clean -o $(REPORT_DIR)
+report-ui:
+	allure generate $(ALLURE_UI_DIR) --clean -o $(REPORT_DIR)/ui
 
-report-open:
-	allure serve $(ALLURE_DIR)
+report-api:
+	allure generate $(ALLURE_API_DIR) --clean -o $(REPORT_DIR)/api
+
+report-open-ui:
+	allure serve $(ALLURE_UI_DIR)
+
+report-open-api:
+	allure serve $(ALLURE_API_DIR)
 
 # ── Clean ─────────────────────────────────────────────────────────────────────
 clean:
