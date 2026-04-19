@@ -1,8 +1,8 @@
 # InsiderOne Senior QA Engineer Assessment
 
-[![UI Tests — Chrome](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml)
+[![Test Suite](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml)
 
-A production-grade test automation framework covering **UI** testing.
+A production-grade test automation framework covering **UI** and **Load** testing.
 
 > This project was developed collaboratively with [Claude Code](https://claude.ai/code) by Anthropic. The engineering standards, architectural decisions, and code quality applied throughout this framework reflect my professional approach to QA automation. I believe in transparent human–AI collaboration as a force multiplier for engineering excellence.
 
@@ -16,14 +16,15 @@ The pipeline runs on every push and pull request via GitHub Actions (`.github/wo
 |-----|---------|
 | UI Tests — Chrome | push / pull_request → master, main, develop |
 | UI Tests — Firefox | push / pull_request → master, main, develop |
+| Load Tests | push / pull_request → master, main, develop |
 
-Each browser runs as a separate matrix job. Allure results are uploaded as artifacts on every run.
+Each browser runs as a separate matrix job. Allure and Locust results are uploaded as artifacts on every run.
 
 ---
 
 ## Architecture
 
-### Five-Layer Design
+### Five-Layer UI Design
 
 ```
 ui_tests/
@@ -35,6 +36,19 @@ ui_tests/
 ```
 
 A selector change touches exactly **one** locator file. Pages, flows, and test assertions are untouched.
+
+### Load Modular Locust Design
+
+```
+load_tests/
+├── locustfile.py   ← thin entry point — no scenario logic
+├── config.py       ← env-driven: base URL, thresholds, think time
+├── data/           ← all test data and assertion constants
+├── utils/          ← centralized response validation + logger
+└── scenarios/      ← one file per user type, plugged in via __init__.py
+```
+
+Adding a new load scenario = one new file + one import line. Nothing else changes.
 
 ### Key Decisions
 
@@ -48,6 +62,7 @@ A selector change touches exactly **one** locator file. Pages, flows, and test a
 | `implicitly_wait(0)` | Prevents implicit/explicit wait interference; all waits are explicit |
 | Selenium Manager | Built into Selenium 4.6+ — no third-party driver manager, parallel-safe |
 | Allure reporting | Screenshot-on-failure attached inline with test name + browser + timestamp |
+| Self-contained `load_tests/utils/` | Avoids sys.path collision when Locust adds its locustfile dir to the front of sys.path |
 
 ---
 
@@ -58,10 +73,7 @@ insiderone2/
 │
 ├── .github/
 │   └── workflows/
-│       └── tests.yml              # CI: Chrome + Firefox matrix jobs
-│
-├── utils/
-│   └── logger.py                  # Shared structured logger (colorlog)
+│       └── tests.yml              # CI: Chrome + Firefox matrix + Load Tests
 │
 ├── ui_tests/
 │   ├── conftest.py                # pytest_generate_tests, driver fixture, screenshot hook
@@ -84,8 +96,24 @@ insiderone2/
 │   │   ├── test_home_page.py
 │   │   └── test_insider_careers.py
 │   └── utils/
-│       └── driver_factory.py     # Chrome/Firefox factory, headless support, Selenium Manager
+│       ├── driver_factory.py     # Chrome/Firefox factory, headless support, Selenium Manager
+│       └── logger.py             # Structured logger (colorlog); pytest-aware, no duplicate handlers
 │
+├── load_tests/
+│   ├── locustfile.py             # Thin entry point — imports all scenario users
+│   ├── config.py                 # Env-driven: BASE_URL, CATEGORY_SLUGS, thresholds
+│   ├── data/
+│   │   └── search_data.py        # Query lists + assertion constants (NO_RESULTS_TEXT)
+│   ├── utils/
+│   │   ├── logger.py             # Self-contained logger (no project-root dependency)
+│   │   └── response_validator.py # Centralized HTTP validation + P95 threshold checks
+│   └── scenarios/
+│       ├── __init__.py           # Registers all HttpUser classes
+│       ├── category_search.py    # Scenario A: homepage → category page   [smoke]
+│       ├── product_search.py     # Scenario B: keyword search → /arama    [smoke+regression]
+│       └── user_journey.py       # Scenario C: sequential homepage→search journey
+│
+├── locust.conf                   # Default CLI params (users=1, run-time=60s, locustfile=…)
 ├── .pre-commit-config.yaml       # flake8 + trailing-whitespace + debug-statement checks
 ├── Makefile                      # Short commands for every run scenario
 ├── pytest.ini                    # testpaths, addopts (allure, reruns), markers, log config
@@ -120,9 +148,18 @@ cp .env.example .env
 ### Optional: Enable pre-commit hooks
 
 ```bash
-pip install pre-commit
+pip install -r requirements-dev.txt
 pre-commit install
 ```
+
+### Troubleshooting
+
+| Hata | Çözüm |
+|------|-------|
+| `allure: command not found` | `brew install allure` (macOS) veya [Allure docs](https://allurereport.org/docs/) |
+| `ModuleNotFoundError: load_tests` | Proje kökünden çalıştır (`setup.cfg pythonpath = .` ile çözülmüş) |
+| Chrome/Firefox bulunamadı | Selenium Manager otomatik indirir; sürüm uyumsuzluğunda Chrome'u güncelle |
+| n11.com istekleri fail | Rate limiting / bot protection devreye girmiş olabilir; `THINK_TIME_MAX` artır |
 
 ---
 
@@ -141,12 +178,20 @@ make ui-all-headless           # Chrome + Firefox headless (CI mode)
 make ui-parallel               # Chrome, -n auto workers
 make ui-all-parallel           # Chrome + Firefox, -n auto workers
 
+# Load Tests
+make load-test                 # 1 user, 60s — assessment default (locust.conf)
+make load-test-smoke           # smoke-tagged tasks only
+make load-test-scale           # 10 users, 120s — scale test
+
+# All Tests
+make test-all                  # UI (Chrome) + Load Tests
+
 # Reports
 make report                    # Generate Allure HTML report
 make report-open               # Generate + open in browser
 
 # Cleanup
-make clean                     # Delete automation-test-results/
+make clean                     # Delete automation-test-results/ and locust artifacts
 ```
 
 > Run `make help` to see the full list at any time.
@@ -201,18 +246,40 @@ A test is marked as failed only if it fails on **all 3 attempts**. Retry count a
 
 **Technologies**: Python · Selenium 4 · pytest · Selenium Manager · POM
 
+### Load Testing (n11.com Search Module)
+
+| Scenario | User Class | Weight | Tags | What is verified |
+|----------|-----------|--------|------|-----------------|
+| `category_search.py` | `CategorySearchUser` | 1 | `smoke` | Homepage → category page HTTP 200, response body size |
+| `product_search.py` | `ProductSearchUser` | 3 | `smoke` `regression` | Keyword search 200, no-results detection, P95 threshold |
+| `user_journey.py` | `UserJourneyUser` | 1 | — | Sequential homepage → search flow, interrupt + reschedule |
+
+**Technologies**: Python · Locust · locust.conf · HttpUser · SequentialTaskSet
+
 ---
 
 ## Test Markers
+
+### pytest (UI)
 
 ```bash
 pytest -m smoke       # test_01, test_03 — fast critical-path check
 pytest -m regression  # all 4 tests — full suite
 ```
 
+### Locust (Load)
+
+```bash
+locust --headless --tags smoke       # CategorySearchUser + ProductSearchUser popular search
+locust --headless --tags regression  # ProductSearchUser all tasks
+locust --headless                    # all scenarios, all tasks (default)
+```
+
 ---
 
 ## Environment Variables
+
+### UI Tests
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -220,6 +287,15 @@ pytest -m regression  # all 4 tests — full suite
 | `BROWSER` | `chrome` | Default browser when `--browser` not set |
 | `HEADLESS` | `false` | Run browser in headless mode |
 | `EXPLICIT_WAIT` | `30` | Selenium explicit wait timeout (seconds) |
+
+### Load Tests
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LOAD_TEST_ENV` | `production` | Target environment (`production` \| `staging`) |
+| `P95_THRESHOLD_MS` | `3000` | P95 response time warning threshold (ms) |
+| `THINK_TIME_MIN` | `2` | Minimum wait between tasks (seconds) |
+| `THINK_TIME_MAX` | `5` | Maximum wait between tasks (seconds) |
 
 ---
 
@@ -234,6 +310,7 @@ pytest -m regression  # all 4 tests — full suite
 | Parallel Execution | pytest-xdist | 3.5.x |
 | Flaky Test Retry | pytest-rerunfailures | 14.0.x |
 | Reporting | allure-pytest | 2.13.x |
+| Load Testing | Locust | 2.x |
 | Logging | colorlog | 6.8.x |
 | CI/CD | GitHub Actions | — |
 | Code Quality | flake8 + pre-commit | — |
