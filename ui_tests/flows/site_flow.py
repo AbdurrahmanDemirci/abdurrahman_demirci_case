@@ -1,6 +1,7 @@
 from ui_tests.locators.home_page_locators import HomePageLocators as L
 from ui_tests.pages.base_page import BasePage
 from ui_tests.pages.careers_page import CareersPage
+from ui_tests.pages.home_page import HomePage
 from ui_tests.pages.job_listing_page import JobListingPage
 
 _COOKIE_ACTIONS = {
@@ -20,7 +21,7 @@ class SiteFlow(BasePage):
             )
         self._click_if_exists(_COOKIE_ACTIONS[action])
 
-    def navigate_to_qa_jobs(self, home_page) -> JobListingPage:
+    def navigate_to_qa_jobs(self, home_page: HomePage) -> JobListingPage:
         home_page.go_to_careers()
         careers = CareersPage(self.driver)
         careers.click_see_all_teams()
