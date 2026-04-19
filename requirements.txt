@@ -1,0 +1,18 @@
+# ============================================================
+# InsiderOne Senior QA Engineer Assessment
+# Python Dependency Manifest
+# ============================================================
+# Install: pip install -r requirements.txt
+
+# --- UI Test Automation ---
+selenium==4.18.1
+
+# --- Test Framework & Reporting ---
+pytest==8.1.1
+pytest-xdist==3.5.0            # Parallel test execution
+pytest-rerunfailures==14.0     # Retry flaky tests
+allure-pytest==2.13.5
+
+# --- Utilities ---
+python-dotenv==1.0.1
+colorlog==6.8.2
