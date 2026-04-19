@@ -3,22 +3,27 @@ Load Test Configuration
 =======================
 Central config for all load test scenarios.
 To add a new environment: add an entry to ENVIRONMENTS.
-To add new test data: extend CATEGORY_SLUGS or SEARCH_KEYWORDS.
+To add new category targets: extend CATEGORY_SLUGS.
+Test data (keywords, queries) lives in data/search_data.py.
 """
 
 import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ---------------------------------------------------------------------------
 # Environments
 # ---------------------------------------------------------------------------
 ENVIRONMENTS = {
     "production": "https://www.n11.com",
-    "staging":    "https://staging.n11.com",   # update when staging URL is known
+    "staging":    "https://staging.n11.com",
     "local":      "http://localhost:3000",
 }
 
 TARGET_ENV = os.getenv("LOAD_TEST_ENV", "production")
-BASE_URL = ENVIRONMENTS[TARGET_ENV]
+BASE_URL    = ENVIRONMENTS[TARGET_ENV]
 
 # ---------------------------------------------------------------------------
 # Shared HTTP headers (browser-like, avoids bot rejection)
@@ -34,23 +39,21 @@ DEFAULT_HEADERS = {
 }
 
 # ---------------------------------------------------------------------------
-# Test data
-# Adding a new category or keyword = one line below, no other file changes.
+# Route targets (environment-specific, not test data)
 # ---------------------------------------------------------------------------
 CATEGORY_SLUGS = [
     "/bilgisayar",
     "/telefon-ve-aksesuarlari",
 ]
 
-SEARCH_KEYWORDS = [
-    "Apple Macbook Pro m5",
-    "iPhone 17 Pro Max",
-    "Samsung Galaxy S25",
-    "Sony WH-1000XM5",
-    "Xiaomi tablet",
-]
+# ---------------------------------------------------------------------------
+# Performance thresholds (env-configurable)
+# ---------------------------------------------------------------------------
+MIN_RESPONSE_BODY_SIZE = 500
+RESPONSE_TIME_P95_MS   = int(os.getenv("P95_THRESHOLD_MS", "3000"))
 
 # ---------------------------------------------------------------------------
-# Thresholds (used in response validation)
+# Think time (env-configurable)
 # ---------------------------------------------------------------------------
-MIN_RESPONSE_BODY_SIZE = 500   # bytes — anything smaller = likely empty/error page
+THINK_TIME_MIN = float(os.getenv("THINK_TIME_MIN", "1.0"))
+THINK_TIME_MAX = float(os.getenv("THINK_TIME_MAX", "3.0"))
