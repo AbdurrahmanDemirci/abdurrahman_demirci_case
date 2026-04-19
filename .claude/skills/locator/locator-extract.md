@@ -134,3 +134,21 @@ careersPage_jobCards_list            = Locator(By.CSS_SELECTOR, ".position-list-
 3. **Stabil selector**: Deploy'da degismeyecek attribute'lar secilir
 4. **pages/ katmanina dokunma**: Locator eklemek page object'i degistirmez — sayfa yeni metod gerektiriyorsa ayri belirt
 5. **Locator sinifi zorunlu**: Duz `(By.X, "...")` tuple degil, `Locator(By.X, "...")` kullanilir
+
+---
+
+## Buyume Prensibi — Locator Katmaninin Rolu
+
+> Detay: `../project-config.md` → "Buyumeye Acik Mimari"
+
+`Locator.__set_name__` sayesinde:
+- Yeni locator = **1 satir** `*_locators.py`'de — baska hicbir dosya degismez
+- pages/, tests/, flows/ **dokunulmaz**
+- Log'larda `By.CSS_SELECTOR '#btn'` yerine `homePage_cookieAccept_btn` gorunur — debug kolayligi
+
+Yeni sayfa eklendiginde:
+- `{yeniSayfa}_locators.py` olustur, `class {YeniSayfa}Locators` tanimla
+- `pages/{yeni_sayfa}.py`'de `from ui_tests.locators.{yeni_sayfa}_locators import {YeniSayfa}Locators as L` ile import et
+- Baska hicbir dosyaya dokunma
+
+Bu kalip projenin herhangi bir sayfasına locator eklemesini tek-satir operasyonu yapar.

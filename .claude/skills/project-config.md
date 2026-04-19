@@ -13,6 +13,47 @@ Bu dosya proje-spesifik ayarları içerir. Bütün skill dosyaları buradan okur
 
 ---
 
+## Buyumeye Acik Mimari — Temel Prensipler
+
+Bu proje bir case study olarak baslamis olsa da **global olcekte buyumeye hazir** tasarlanmistir.
+Asagidaki kaliplar kodun her katmanina islenmi? olup yeni ozellik, sayfa veya ortam eklemek minimum degisiklik gerektirir.
+
+### UI Test Katmani
+
+| Kalip | Nerede | Buyumeye Katkisi |
+|-------|--------|-----------------|
+| **BasePage mirası** | `pages/base_page.py` | Yeni sayfa = sadece `class XPage(BasePage)`. Wait, click, scroll, log ucretsiz gelir. |
+| **Locator.__set_name__** | `locators/locator.py` | Locator kendini otomatik isimlendirir. Yeni locator = 1 satir, kayit gerekmez. |
+| **env-driven config** | `ui_tests/config.py` | `BASE_URL`, `HEADLESS`, `EXPLICIT_WAIT`, `BROWSER` `.env`'den okunur. Ortam degisimi = env var degisimi, kod dokunulmaz. |
+| **pytest_generate_tests** | `conftest.py` | Cross-browser otomatik parametrize. Yeni browser = liste'ye 1 eleman. |
+| **driver_factory soyutlama** | `utils/driver_factory.py` | Tum browser olusturma tek yerde. Safari/Edge eklemek = 1 if blogu. |
+| **SiteFlow._COOKIE_ACTIONS dict** | `flows/site_flow.py` | Yeni cookie aksiyonu = dict'e 1 satir, cagiran kod degismez. |
+| **_click_if_exists / _navigate_via_href** | `pages/base_page.py` | Dinamik ve SPA sayfalar icin savunmaci kaliplar, brittle wait gerektirmez. |
+| **5-katmanli POM ayirimi** | `locators/ pages/ flows/ data/ tests/` | UI degisimi sadece 1 katmani etkiler. Cascading degisiklik olmaz. |
+| **expected_content.py** | `data/expected_content.py` | Tum assertion sabitleri tek dosyada. Icerik degisimi = 1 dosya guncelleme. |
+| **GitHub Actions matrix** | `.github/workflows/tests.yml` | Chrome + Firefox CI'da tanimlı. Yeni browser = matrix'e 1 satir. |
+
+### Load Test Katmani
+
+| Kalip | Nerede | Buyumeye Katkisi |
+|-------|--------|-----------------|
+| **Modular senaryolar** | `load_tests/scenarios/` | Yeni senaryo = yeni dosya + `__init__.py`'e 1 import. Baska hicbir sey degismez. |
+| **Merkezi config** | `load_tests/config.py` | Ortam, test verisi, esik degerleri tek yerde. Yeni ortam = 1 satir. |
+| **Ince entry point** | `load_tests/locustfile.py` | Sadece import. Senaryo eklemek locustfile.py'e dokunmak gerektirmez. |
+| **env-var ortam secimi** | `LOAD_TEST_ENV` | `LOAD_TEST_ENV=staging locust ...` ile ortam gecisi, kod degismez. |
+
+### Bu Prensiplere Uyarak Kod Yazma Kurali
+
+Yeni bir senaryo, sayfa, locator veya test yazarken su soruyu sor:
+> **"Bu degisiklik baska bir dosyaya cascade eder mi?"**
+
+- Eder → Katman ihlali var, yapiyi gozden gecir
+- Etmez → Dogru yerde yazilmis demektir
+
+Tum skill'ler bu prensibi pekistirerek kod uretir.
+
+---
+
 ## Dizin Yapısı
 
 ```
