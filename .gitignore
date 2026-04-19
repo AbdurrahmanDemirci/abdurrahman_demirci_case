@@ -48,12 +48,7 @@ htmlcov/
 nosetests.xml
 
 # ── Test reports & artifacts ──────────────────────────────────────────────────
-automation-test-results/screenshots/
-automation-test-results/allure-results/
-automation-test-results/allure-report/
-automation-test-results/*.html
-automation-test-results/*.xml
-automation-test-results/*.json
+automation-test-results/
 
 # ── Type checkers & linters ───────────────────────────────────────────────────
 .mypy_cache/
