@@ -5,12 +5,16 @@ on:
     branches: [main, master, develop]
     paths:
       - 'ui_tests/**'
+      - 'load_tests/**'
+      - 'locust.conf'
       - 'requirements.txt'
       - '.github/workflows/tests.yml'
   pull_request:
     branches: [main, master]
     paths:
       - 'ui_tests/**'
+      - 'load_tests/**'
+      - 'locust.conf'
       - 'requirements.txt'
       - '.github/workflows/tests.yml'
 
@@ -46,4 +50,35 @@ jobs:
         with:
           name: allure-results-ui-${{ matrix.browser }}
           path: automation-test-results/allure-results/
+          retention-days: 7
+
+  # ── Load Tests ──────────────────────────────────────────────────────────────
+  load-tests:
+    name: Load Tests (n11.com search)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Load Tests (1 user, 60s, headless)
+        run: |
+          mkdir -p automation-test-results/locust
+          locust --headless --exit-code-on-error 1 --html automation-test-results/locust/locust_report.html --csv automation-test-results/locust/locust
+
+      - name: Upload Locust results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: locust-results
+          path: automation-test-results/locust/
           retention-days: 7
