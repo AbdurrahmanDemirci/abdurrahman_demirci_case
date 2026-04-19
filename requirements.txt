@@ -13,6 +13,9 @@ pytest-xdist==3.5.0            # Parallel test execution
 pytest-rerunfailures==14.0     # Retry flaky tests
 allure-pytest==2.13.5
 
+# --- Load Testing ---
+locust==2.32.3
+
 # --- Utilities ---
 python-dotenv==1.0.1
 colorlog==6.8.2
