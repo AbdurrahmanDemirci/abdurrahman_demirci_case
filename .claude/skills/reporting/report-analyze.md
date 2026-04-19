@@ -158,3 +158,60 @@ Sonraki Adim: /Insider-test-fix ile test_03 ve test_04'u duzelt
 
 ### Detayli Rapor (Istenirse)
 Tum metrikler, browser bazli tablo, her failure detayi, pattern analizi ve oncelikli aksiyon listesi.
+
+---
+
+## Locust Raporu Analizi
+
+Kullanici su kaynaklardan birini saglar:
+1. **`locust_report.html`** (CI artifact veya `make load-test` sonrasi)
+2. **`locust_stats.csv` / `locust_stats_history.csv`** (CSV artifacts)
+3. **Locust terminal ciktisi** (kopyala-yapistir)
+
+### Adim 1: Temel Metrikleri Oku
+
+```
+## Locust Kosu Ozeti
+
+- **Tarih**: {tarih}
+- **Kullanici Sayisi**: {users}
+- **Spawn Rate**: {spawn-rate}/s
+- **Sure**: {run-time}
+- **Toplam Istek**: {total_requests}
+- **Hata Sayisi**: {failures}
+- **Failure Rate**: %{rate}
+```
+
+### Adim 2: Endpoint Bazli Analiz
+
+| Endpoint | Req/s | Avg (ms) | P95 (ms) | Failure |
+|----------|-------|----------|----------|---------|
+| / (homepage) | — | — | — | — |
+| /arama?q=[popular] | — | — | — | — |
+| /arama?q=[tech] | — | — | — | — |
+| /arama?q=[edge_case] | — | — | — | — |
+| /[category-slug] | — | — | — | — |
+
+### Adim 3: Esik Deger Kontrolu
+
+| Metrik | Kabul Edilebilir | Dikkat | Kritik |
+|--------|-----------------|--------|--------|
+| Failure rate | %0 | >%1 | >%5 |
+| Homepage avg | <2000ms | >3000ms | >5000ms |
+| Kategori avg | <500ms | >1000ms | >2000ms |
+| Arama avg | <1500ms | >3000ms | >5000ms |
+| P95 (genel) | <3000ms | >5000ms | >8000ms |
+
+**Not**: Kategori sayfasi genellikle <200ms gelir (CDN cache) — normal ve beklenen.
+
+### Adim 4: Aksiyon Onerileri
+
+```
+## Locust Analiz Sonucu
+
+Failure rate: %{rate} — {kabul edilebilir / dikkat / kritik}
+En yavas endpoint: {endpoint} avg={avg}ms P95={p95}ms
+Kapasite: {req/s} istek/saniye — {yeterli / yetersiz}
+
+Sonraki Adim: {öneri}
+```

@@ -121,10 +121,13 @@ expected_content.py → Icerik degisimi = 1 dosya
 ### Load Test Katmanindaki Kaliplar
 
 ```
-scenarios/ klasoru  → Yeni senaryo = yeni dosya + 1 import
-config.py merkezi   → Yeni ortam = 1 satir
-locustfile.py ince  → Entry point'e hic dokunulmaz
-LOAD_TEST_ENV       → Ortam gecisi = env var
+scenarios/ klasoru        → Yeni senaryo = yeni dosya + 1 import
+config.py merkezi         → Yeni ortam = 1 satir
+locustfile.py ince        → Entry point'e hic dokunulmaz
+LOAD_TEST_ENV             → Ortam gecisi = env var
+data/search_data.py       → Yeni assertion sabiti = 1 satir, validator'e dokunulmaz
+utils/response_validator  → Validation merkezi; senaryo dosyasinda inline kontrol yok
+load_tests/utils/logger   → Bagimsiz logger; proje root utils/ ile sys.path catismasi yok
 ```
 
 ### Skill Uretiminde Buyume Prensibi

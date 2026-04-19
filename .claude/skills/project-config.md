@@ -26,7 +26,7 @@ Asagidaki kaliplar kodun her katmanina islenmi? olup yeni ozellik, sayfa veya or
 | **Locator.__set_name__** | `locators/locator.py` | Locator kendini otomatik isimlendirir. Yeni locator = 1 satir, kayit gerekmez. |
 | **env-driven config** | `ui_tests/config.py` | `BASE_URL`, `HEADLESS`, `EXPLICIT_WAIT`, `BROWSER` `.env`'den okunur. Ortam degisimi = env var degisimi, kod dokunulmaz. |
 | **pytest_generate_tests** | `conftest.py` | Cross-browser otomatik parametrize. Yeni browser = liste'ye 1 eleman. |
-| **driver_factory soyutlama** | `utils/driver_factory.py` | Tum browser olusturma tek yerde. Safari/Edge eklemek = 1 if blogu. |
+| **driver_factory soyutlama** | `ui_tests/utils/driver_factory.py` | Tum browser olusturma tek yerde. Safari/Edge eklemek = 1 if blogu. |
 | **SiteFlow._COOKIE_ACTIONS dict** | `flows/site_flow.py` | Yeni cookie aksiyonu = dict'e 1 satir, cagiran kod degismez. |
 | **_click_if_exists / _navigate_via_href** | `pages/base_page.py` | Dinamik ve SPA sayfalar icin savunmaci kaliplar, brittle wait gerektirmez. |
 | **5-katmanli POM ayirimi** | `locators/ pages/ flows/ data/ tests/` | UI degisimi sadece 1 katmani etkiler. Cascading degisiklik olmaz. |
@@ -77,14 +77,13 @@ insiderone2/
 │   ├── data/                   ← WHAT to expect (assertion constants)
 │   │   └── expected_content.py
 │   ├── utils/
-│   │   └── driver_factory.py   ← Chrome/Firefox, Selenium Manager
+│   │   ├── driver_factory.py   ← Chrome/Firefox, Selenium Manager
+│   │   └── logger.py           ← Structured logger (colorlog, pytest-aware)
 │   ├── tests/
 │   │   ├── test_home_page.py
 │   │   └── test_insider_careers.py
 │   ├── conftest.py             ← pytest_generate_tests, driver fixture, screenshot hook
 │   └── config.py               ← env-driven (BASE_URL, HEADLESS, EXPLICIT_WAIT …)
-├── utils/
-│   └── logger.py               ← Paylaşılan logger (colorlog)
 ├── .env                        ← Lokal overrides (gitignored)
 ├── .env.example                ← Template
 ├── .pre-commit-config.yaml     ← flake8 + trailing-whitespace

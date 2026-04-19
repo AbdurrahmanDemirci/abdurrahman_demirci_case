@@ -21,6 +21,7 @@ load_tests/
 ├── data/
 │   └── search_data.py         ← Tum test verisi ve assertion sabitleri
 ├── utils/
+│   ├── base_task_set.py       ← BaseTaskSet: on_start (homepage) + on_stop (log)
 │   └── response_validator.py  ← Merkezi validasyon + P95 esik kontrolleri
 └── scenarios/
     ├── __init__.py            ← Senaryo siniflarini kayit eder
@@ -63,17 +64,20 @@ Sirayla: anasayfa → arama → sonuclari goruntule.
 ## Calistirma Komutlari
 
 ```bash
-# Assessment default — 1 kullanici, 60 saniye
-locust -f load_tests/locustfile.py --headless -u 1 -r 1 --run-time 60s
+# Assessment default — 1 kullanici, 60 saniye (locust.conf varsayilanlari)
+locust --headless
 
 # Olcekleme — 10 kullanici
-locust -f load_tests/locustfile.py --headless -u 10 -r 2 --run-time 120s
+locust --headless -u 10 -r 2 --run-time 120s
+
+# Sadece smoke tag'li task'lar
+locust --headless --tags smoke
 
 # Baska ortam
-LOAD_TEST_ENV=staging locust -f load_tests/locustfile.py --headless -u 1 -r 1 --run-time 60s
+LOAD_TEST_ENV=staging locust --headless
 
 # Web UI (gercek zamanli grafik)
-locust -f load_tests/locustfile.py
+locust
 ```
 
 ---
@@ -98,29 +102,49 @@ Raporda izlenecek metrikler:
 ## Yeni Senaryo Ekleme Adimlari
 
 1. `load_tests/scenarios/` altinda yeni `.py` dosyasi olustur
-2. `HttpUser` sinifini miras al, `host`, `wait_time`, `@task` metodlarini tanimla
+2. TaskSet sinifini `BaseTaskSet`'ten miras al (`on_start`/`on_stop` otomatik gelir), `HttpUser` ayri tanimla
 3. `load_tests/scenarios/__init__.py`'e import satirini ekle
 4. `locustfile.py`'e dokunma — otomatik kesfedilir
 
 **Ornek — Yeni senaryo: urun detay sayfasi:**
 ```python
 # load_tests/scenarios/product_detail.py
-from locust import HttpUser, between, task
-from load_tests.config import BASE_URL, DEFAULT_HEADERS
+from locust import HttpUser, TaskSet, between, task
+from load_tests.config import BASE_URL, DEFAULT_HEADERS, THINK_TIME_MIN, THINK_TIME_MAX
+from load_tests.utils.response_validator import validate_homepage_response
+from load_tests.utils.logger import get_logger
 
-class ProductDetailUser(HttpUser):
-    host = BASE_URL
-    wait_time = between(2, 5)
+logger = get_logger(__name__)
+
+PRODUCT_SLUGS = ["/urun-adi-p-123456789", "/baska-urun-p-987654321"]
+
+class ProductDetailTasks(TaskSet):
+
+    def on_start(self):
+        with self.client.get("/", headers=DEFAULT_HEADERS, catch_response=True) as resp:
+            validate_homepage_response(resp)
 
     @task
     def view_product(self):
+        import random
+        slug = random.choice(PRODUCT_SLUGS)
         with self.client.get(
-            "/urun-adi-p-123456789",
+            slug,
             headers=DEFAULT_HEADERS,
             name="/[product-detail]",
             catch_response=True,
         ) as resp:
-            resp.success() if resp.status_code == 200 else resp.failure(str(resp.status_code))
+            if resp.status_code == 200:
+                resp.success()
+            else:
+                resp.failure(f"Unexpected status {resp.status_code}")
+            logger.info(f"Product | slug='{slug}' | status={resp.status_code}")
+
+class ProductDetailUser(HttpUser):
+    host      = BASE_URL
+    weight    = 1
+    tasks     = [ProductDetailTasks]
+    wait_time = between(THINK_TIME_MIN, THINK_TIME_MAX)
 ```
 
 ```python
