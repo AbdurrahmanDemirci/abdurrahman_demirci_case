@@ -55,5 +55,5 @@ RESPONSE_TIME_P95_MS   = int(os.getenv("P95_THRESHOLD_MS", "3000"))
 # ---------------------------------------------------------------------------
 # Think time (env-configurable)
 # ---------------------------------------------------------------------------
-THINK_TIME_MIN = float(os.getenv("THINK_TIME_MIN", "1.0"))
-THINK_TIME_MAX = float(os.getenv("THINK_TIME_MAX", "3.0"))
+THINK_TIME_MIN = float(os.getenv("THINK_TIME_MIN", "2.0"))
+THINK_TIME_MAX = float(os.getenv("THINK_TIME_MAX", "5.0"))

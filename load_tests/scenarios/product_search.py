@@ -12,27 +12,24 @@ New environments     → set LOAD_TEST_ENV env var.
 
 import random
 
-from locust import HttpUser, TaskSet, between, tag, task
+from locust import HttpUser, between, tag, task
 
 from load_tests.config import BASE_URL, DEFAULT_HEADERS, THINK_TIME_MIN, THINK_TIME_MAX
 from load_tests.data.search_data import EDGE_CASE_QUERIES, POPULAR_QUERIES, TECH_QUERIES
+from load_tests.utils.base_task_set import BaseTaskSet
+from load_tests.utils.logger import get_logger
 from load_tests.utils.response_validator import (
-    validate_edge_case_response, validate_homepage_response, validate_search_response,
+    validate_edge_case_response, validate_search_response,
 )
-from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class ProductSearchTasks(TaskSet):
-
-    def on_start(self):
-        with self.client.get("/", headers=DEFAULT_HEADERS, catch_response=True) as resp:
-            validate_homepage_response(resp)
+class ProductSearchTasks(BaseTaskSet):
 
     @tag("smoke", "regression")
     @task(5)
-    def search_popular_keyword(self):
+    def search_popular_keyword(self) -> None:
         query = random.choice(POPULAR_QUERIES)
         with self.client.get(
             "/arama",
@@ -49,7 +46,7 @@ class ProductSearchTasks(TaskSet):
 
     @tag("regression")
     @task(2)
-    def search_tech_category(self):
+    def search_tech_category(self) -> None:
         query = random.choice(TECH_QUERIES)
         with self.client.get(
             "/arama",
@@ -66,7 +63,7 @@ class ProductSearchTasks(TaskSet):
 
     @tag("regression")
     @task(1)
-    def search_edge_cases(self):
+    def search_edge_cases(self) -> None:
         query = random.choice(EDGE_CASE_QUERIES)
         with self.client.get(
             "/arama",
@@ -81,8 +78,6 @@ class ProductSearchTasks(TaskSet):
                 f"| status={resp.status_code} | {resp.elapsed.total_seconds():.2f}s"
             )
 
-    def on_stop(self):
-        logger.info("ProductSearchTasks session ended.")
 
 
 class ProductSearchUser(HttpUser):

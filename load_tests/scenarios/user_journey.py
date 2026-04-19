@@ -20,7 +20,7 @@ from locust import HttpUser, SequentialTaskSet, between, task
 from load_tests.config import BASE_URL, DEFAULT_HEADERS, THINK_TIME_MIN, THINK_TIME_MAX
 from load_tests.data.search_data import POPULAR_QUERIES
 from load_tests.utils.response_validator import validate_homepage_response, validate_search_response
-from utils.logger import get_logger
+from load_tests.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -28,11 +28,8 @@ logger = get_logger(__name__)
 class UserJourneyTasks(SequentialTaskSet):
     _current_query: str = "laptop"
 
-    def on_start(self):
-        logger.info("UserJourneyTasks session started.")
-
     @task
-    def visit_homepage(self):
+    def visit_homepage(self) -> None:
         with self.client.get(
             "/",
             headers=DEFAULT_HEADERS,
@@ -45,7 +42,7 @@ class UserJourneyTasks(SequentialTaskSet):
             )
 
     @task
-    def perform_search(self):
+    def perform_search(self) -> None:
         self._current_query = random.choice(POPULAR_QUERIES)
         with self.client.get(
             "/arama",
@@ -61,9 +58,6 @@ class UserJourneyTasks(SequentialTaskSet):
             )
 
         self.interrupt(reschedule=True)
-
-    def on_stop(self):
-        logger.info("UserJourneyTasks session ended.")
 
 
 class UserJourneyUser(HttpUser):

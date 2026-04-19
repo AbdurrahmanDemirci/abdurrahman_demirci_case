@@ -21,7 +21,7 @@ Adding a new scenario = create a new file there + one import in scenarios/__init
       ├── __init__.py            ← registers all scenario classes
       ├── category_search.py     ← Scenario A: category page via suggestion  [smoke]
       ├── product_search.py      ← Scenario B: weighted keyword searches     [smoke+regression]
-      └── user_journey.py        ← Scenario C: sequential homepage→search→paginate→sort
+      └── user_journey.py        ← Scenario C: sequential homepage→search journey
 
 User distribution (weight):
   ProductSearchUser  : weight=3 → ~60% of users
@@ -30,20 +30,20 @@ User distribution (weight):
 
 Run
 ---
-# Behavioral check — 1 user, 60 seconds (reads locust.conf defaults)
-locust -f load_tests/locustfile.py --headless
+# Behavioral check — 1 user, 60 seconds (all defaults from locust.conf)
+locust --headless
 
 # Scale up — 10 concurrent users
-locust -f load_tests/locustfile.py --headless -u 10 -r 2 --run-time 120s
+locust --headless -u 10 -r 2 --run-time 120s
 
 # Smoke only
-locust -f load_tests/locustfile.py --headless --tags smoke
+locust --headless --tags smoke
 
 # Staging environment
-LOAD_TEST_ENV=staging locust -f load_tests/locustfile.py --headless
+LOAD_TEST_ENV=staging locust --headless
 
 # Web UI (real-time charts)
-locust -f load_tests/locustfile.py
+locust
 """
 
 from load_tests.scenarios import (  # noqa: F401

@@ -1,6 +1,6 @@
 from load_tests.config import MIN_RESPONSE_BODY_SIZE, RESPONSE_TIME_P95_MS
 from load_tests.data.search_data import NO_RESULTS_TEXT
-from utils.logger import get_logger
+from load_tests.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
