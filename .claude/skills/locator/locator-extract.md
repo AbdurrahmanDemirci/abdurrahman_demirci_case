@@ -32,15 +32,18 @@ Giris belirsizse su soruyu sor:
 
 ### Adim 1: Hangi Sayfaya Ait?
 
-Mevcut sayfa kontekstleri (`project-config.md`'den):
+Mevcut sayfa kontekstleri → `project-config.md` → "Dizin Yapisi" bolumunden oku.
+
+Her proje icin `ui_tests/locators/` altindaki dosyalar ve sinif isimleri farklidir.
+Yeni bir sayfa icin locator yaziliyorsa → yeni `{sayfa_adi}_locators.py` dosyasi olusturulur.
+
+**Bu Projede (InsiderOne):**
 
 | Kontekst | Dosya |
 |----------|-------|
 | `homePage` | `ui_tests/locators/home_page_locators.py` |
 | `careersPage` | `ui_tests/locators/careers_page_locators.py` |
 | `jobListingPage` | `ui_tests/locators/job_listing_page_locators.py` |
-
-Yeni bir sayfa icin locator yaziliyorsa → yeni `{sayfa_adi}_locators.py` dosyasi olusturulur.
 
 ### Adim 2: Mevcut Locator'lari Oku
 

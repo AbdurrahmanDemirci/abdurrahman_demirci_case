@@ -161,4 +161,3 @@ git push
 6. **Staging secici**: `git add -A` yerine degisen dosyalari scope'a gore ekle
 7. **Amend yerine yeni commit**: Hook fail olursa amend yapma, yeni commit olustur
 8. **Co-Authored-By YASAK**: Commit mesajina `Co-Authored-By` satiri EKLENMEZ
-9. **pre-commit hook**: `.pre-commit-config.yaml` aktifse hook'lar otomatik calisir; basarisiz olursa sorunu coz, --no-verify kullanma

@@ -28,7 +28,7 @@ git diff --name-only --staged
 
 Degisen dosyalar taranir. Kapsam:
 - `ui_tests/**/*.py`
-- `utils/**/*.py`
+- `load_tests/**/*.py`
 - `conftest.py`
 
 `.venv/`, `__pycache__/`, `automation-test-results/` KAPSAM DISI.
@@ -62,20 +62,6 @@ Konfigurasyon (`setup.cfg`):
 | F811 | Tekrar tanimlanan isim | Duplicate tanimlamayi sil |
 
 **KRITIK**: flake8 hatasi varsa duzelt, commit'e gecme.
-
-### pre-commit (varsa kurulu)
-
-```bash
-pre-commit run --files <degisen-dosyalar>
-```
-
-Aktif hook'lar:
-- `trailing-whitespace` — satir sonu bosluklari
-- `end-of-file-fixer` — dosya sonu newline
-- `check-yaml` — YAML syntax
-- `debug-statements` — unutulan `breakpoint()`, `pdb.set_trace()` tespiti
-
-**`debug-statements` KRITIK**: Test dosyalarinda `breakpoint()` veya `import pdb` varsa commit EDILMEZ — sil.
 
 ---
 

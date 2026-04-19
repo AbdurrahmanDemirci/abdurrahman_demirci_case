@@ -99,7 +99,7 @@ Ornek: `.generate/bug-report-19-04-2026.md`
 **Tarih**: {GG Ay YYYY}
 **Browser(lar)**: Chrome, Firefox
 **Test Suite**: {smoke / regression / full}
-**Kaynak**: pytest + Selenium 4, insiderone.com
+**Kaynak**: pytest + Selenium 4, {proje-sitesi}
 ```
 
 ### 2. Ozet Metrikler

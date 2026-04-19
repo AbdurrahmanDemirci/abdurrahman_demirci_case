@@ -48,7 +48,8 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 │   ├── dev-ops/
 │   │   ├── commit.md                   ← /Insider-commit
 │   │   ├── code-clean.md               ← /Insider-code-clean
-│   │   └── ci.md                       ← /Insider-ci
+│   │   ├── ci.md                       ← /Insider-ci
+│   │   └── pre-commit.md        ← /Insider-pre-commit
 │   │
 │   └── ui-testing/                     ← Referans dokumanlari (slash komutu yok)
 │       ├── test-structure.md
@@ -65,7 +66,8 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
     ├── Insider-load-test.md
     ├── Insider-code-clean.md
     ├── Insider-commit.md
-    └── Insider-ci.md
+    ├── Insider-ci.md
+    └── Insider-pre-commit.md
 ```
 
 ---
@@ -84,6 +86,7 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 | **code-clean** | `/Insider-code-clean` | Commit oncesi Python format ve mimari kural kontrolu yapar, duzeltir |
 | **commit** | `/Insider-commit` | Conventional Commits formatinda degisiklikleri gruplar, commit atar, push eder |
 | **ci** | `/Insider-ci` | GitHub Actions workflow tasariminda dogru pattern uygular; dis bagimlilık, matrix, artifact ve tetikleyici konfigürasyonunu yonetir |
+| **pre-commit** | `/Insider-pre-commit` | Projeden pre-commit hook altyapisini temiz sekilde kaldirir; bagli dosya ve skill referanslarini gunceller |
 
 ---
 

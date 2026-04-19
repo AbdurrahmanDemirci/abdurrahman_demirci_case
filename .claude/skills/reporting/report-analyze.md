@@ -186,11 +186,12 @@ Kullanici su kaynaklardan birini saglar:
 
 | Endpoint | Req/s | Avg (ms) | P95 (ms) | Failure |
 |----------|-------|----------|----------|---------|
-| / (homepage) | — | — | — | — |
-| /arama?q=[popular] | — | — | — | — |
-| /arama?q=[tech] | — | — | — | — |
-| /arama?q=[edge_case] | — | — | — | — |
-| /[category-slug] | — | — | — | — |
+| {ana-sayfa} | — | — | — | — |
+| {senaryo-endpoint-1} | — | — | — | — |
+| {senaryo-endpoint-2} | — | — | — | — |
+| {senaryo-endpoint-3} | — | — | — | — |
+
+Endpoint isimleri `locust.conf` ve senaryo dosyalarindaki `name=` parametrelerinden okunur.
 
 ### Adim 3: Esik Deger Kontrolu
 
@@ -202,7 +203,7 @@ Kullanici su kaynaklardan birini saglar:
 | Arama avg | <1500ms | >3000ms | >5000ms |
 | P95 (genel) | <3000ms | >5000ms | >8000ms |
 
-**Not**: Kategori sayfasi genellikle <200ms gelir (CDN cache) — normal ve beklenen.
+**Not**: Cache'lenen statik sayfalar genellikle cok dusuk latency gosterir — spike veya outlier gibi gorunse de normaldir.
 
 ### Adim 4: Aksiyon Onerileri
 
