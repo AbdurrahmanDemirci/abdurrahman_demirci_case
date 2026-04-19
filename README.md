@@ -1,5 +1,7 @@
 # InsiderOne Senior QA Engineer Assessment
 
+[![UI Tests — Chrome](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case/actions/workflows/tests.yml)
+
 A production-grade test automation framework covering **UI** testing.
 
 > This project was developed collaboratively with [Claude Code](https://claude.ai/code) by Anthropic. The engineering standards, architectural decisions, and code quality applied throughout this framework reflect my professional approach to QA automation. I believe in transparent human–AI collaboration as a force multiplier for engineering excellence.
@@ -12,8 +14,8 @@ The pipeline runs on every push and pull request via GitHub Actions (`.github/wo
 
 | Job | Trigger |
 |-----|---------|
-| UI Tests — Chrome | push / pull_request → main, develop |
-| UI Tests — Firefox | push / pull_request → main, develop |
+| UI Tests — Chrome | push / pull_request → master, main, develop |
+| UI Tests — Firefox | push / pull_request → master, main, develop |
 
 Each browser runs as a separate matrix job. Allure results are uploaded as artifacts on every run.
 
@@ -105,7 +107,7 @@ insiderone2/
 ### Installation
 
 ```bash
-git clone <repo-url> && cd insiderone2
+git clone https://github.com/AbdurrahmanDemirci/abdurrahman_demirci_case.git && cd abdurrahman_demirci_case
 
 python -m venv .venv
 source .venv/bin/activate      # macOS/Linux
