@@ -14,5 +14,5 @@ class HomePage(BasePage):
         )
 
     def go_to_careers(self) -> "HomePage":
-        self._click(L.homePage_careersNavigation_link)
+        self._navigate_via_href(L.homePage_careersNavigation_link)
         return self
