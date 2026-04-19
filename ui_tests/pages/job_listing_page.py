@@ -3,7 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from ui_tests.config import EXPLICIT_WAIT
 from ui_tests.locators.job_listing_page_locators import JobListingPageLocators as L
 from ui_tests.pages.base_page import BasePage
-from utils.logger import get_logger
+from ui_tests.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
