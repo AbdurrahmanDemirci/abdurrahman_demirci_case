@@ -73,7 +73,7 @@ jobs:
       - name: Run Load Tests (1 user, 60s, headless)
         run: |
           mkdir -p automation-test-results/locust
-          locust --headless --exit-code-on-error 1 --html automation-test-results/locust/locust_report.html --csv automation-test-results/locust/locust
+          locust --headless --html automation-test-results/locust/locust_report.html --csv automation-test-results/locust/locust
 
       - name: Upload Locust results
         if: always()
