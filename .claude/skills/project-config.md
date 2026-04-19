@@ -110,9 +110,7 @@ test_NN_açıklama
 | `BROWSER` | `chrome` | Varsayılan browser (chrome / firefox) |
 | `HEADLESS` | `false` | Headless mod |
 | `BASE_URL` | `https://insiderone.com` | Ana sayfa URL |
-| `CAREERS_URL` | `https://insiderone.com/careers/#open-roles` | Kariyer sayfası URL |
 | `EXPLICIT_WAIT` | `30` | Selenium bekleme süresi (saniye) |
-| `SCREENSHOTS_DIR` | `automation-test-results/screenshots` | Screenshot klasörü |
 
 ---
 
