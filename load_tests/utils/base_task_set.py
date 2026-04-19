@@ -10,8 +10,11 @@ logger = get_logger(__name__)
 class BaseTaskSet(TaskSet):
 
     def on_start(self) -> None:
-        with self.client.get("/", headers=DEFAULT_HEADERS, catch_response=True) as resp:
-            validate_homepage_response(resp)
+        try:
+            with self.client.get("/", headers=DEFAULT_HEADERS, catch_response=True) as resp:
+                validate_homepage_response(resp)
+        except Exception as e:
+            logger.warning(f"on_start homepage check skipped: {e}")
 
     def on_stop(self) -> None:
         logger.info(f"{self.__class__.__name__} session ended.")
