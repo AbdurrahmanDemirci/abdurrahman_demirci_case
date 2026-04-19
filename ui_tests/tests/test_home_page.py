@@ -1,10 +1,13 @@
 import pytest
+import allure
 
 from ui_tests.data.expected_content import EXPECTED_HOME_TITLE_KEYWORD
 from ui_tests.flows.site_flow import SiteFlow
 from ui_tests.pages.home_page import HomePage
 
 
+@allure.parent_suite("UI Tests")
+@allure.suite("Home Page")
 class TestHomePage:
 
     @pytest.fixture(autouse=True)

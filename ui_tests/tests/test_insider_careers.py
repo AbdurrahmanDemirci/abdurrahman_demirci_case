@@ -1,4 +1,5 @@
 import pytest
+import allure
 
 from ui_tests.flows.site_flow import SiteFlow
 from ui_tests.pages.home_page import HomePage
@@ -10,6 +11,8 @@ from ui_tests.data.expected_content import (
 )
 
 
+@allure.parent_suite("UI Tests")
+@allure.suite("Insider Careers")
 class TestInsiderCareers:
 
     @pytest.fixture(autouse=True)
