@@ -215,11 +215,9 @@ pytest -m regression  # all 4 tests — full suite
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `BASE_URL` | `https://insiderone.com` | Homepage URL |
-| `CAREERS_URL` | `https://insiderone.com/careers/#open-roles` | Careers page URL |
 | `BROWSER` | `chrome` | Default browser when `--browser` not set |
 | `HEADLESS` | `false` | Run browser in headless mode |
 | `EXPLICIT_WAIT` | `30` | Selenium explicit wait timeout (seconds) |
-| `SCREENSHOTS_DIR` | `automation-test-results/screenshots` | Screenshot output path |
 
 ---
 
