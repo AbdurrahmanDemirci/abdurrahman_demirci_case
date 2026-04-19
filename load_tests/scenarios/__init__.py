@@ -3,3 +3,4 @@
 
 from load_tests.scenarios.category_search import CategorySearchUser  # noqa: F401
 from load_tests.scenarios.product_search import ProductSearchUser    # noqa: F401
+from load_tests.scenarios.user_journey import UserJourneyUser        # noqa: F401
