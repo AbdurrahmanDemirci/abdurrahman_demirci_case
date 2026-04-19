@@ -42,14 +42,14 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run UI Tests — ${{ matrix.browser }} (headless)
-        run: pytest ui_tests/tests/ --browser=${{ matrix.browser }} --headless=true
+        run: pytest ui_tests/tests/ --browser=${{ matrix.browser }} --headless=true --alluredir=automation-test-results/ui/allure-results
 
       - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results-ui-${{ matrix.browser }}
-          path: automation-test-results/allure-results/
+          path: automation-test-results/ui/allure-results/
           retention-days: 7
 
   # ── Load Tests ──────────────────────────────────────────────────────────────
