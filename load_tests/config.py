@@ -49,7 +49,7 @@ CATEGORY_SLUGS = [
 # ---------------------------------------------------------------------------
 # Performance thresholds (env-configurable)
 # ---------------------------------------------------------------------------
-MIN_RESPONSE_BODY_SIZE = 500
+MIN_RESPONSE_BODY_SIZE = int(os.getenv("MIN_RESPONSE_BODY_SIZE"))
 RESPONSE_TIME_P95_MS   = int(os.getenv("P95_THRESHOLD_MS"))
 
 # ---------------------------------------------------------------------------
