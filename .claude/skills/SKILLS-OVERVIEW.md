@@ -51,6 +51,15 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 │   │   ├── ci.md                       ← /Insider-ci
 │   │   └── pre-commit.md        ← /Insider-pre-commit
 │   │
+│   ├── api-testing/
+│   │   ├── test-run.md                 ← /Insider-api-test-run
+│   │   ├── test-fix.md                 ← /Insider-api-test-fix
+│   │   ├── scenario-generate.md        ← /Insider-api-scenario-generate
+│   │   ├── client-add.md               ← /Insider-api-client-add
+│   │   └── references/
+│   │       ├── istqb-api-principles.md ← API icin 6 ISTQB teknigi
+│   │       └── api-test-strategy.md    ← Mevcut kapsam, smoke/regression stratejisi
+│   │
 │   └── ui-testing/                     ← Referans dokumanlari (slash komutu yok)
 │       ├── test-structure.md
 │       ├── data-layer.md
@@ -67,7 +76,11 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
     ├── Insider-code-clean.md
     ├── Insider-commit.md
     ├── Insider-ci.md
-    └── Insider-pre-commit.md
+    ├── Insider-pre-commit.md
+    ├── Insider-api-test-run.md
+    ├── Insider-api-test-fix.md
+    ├── Insider-api-scenario-generate.md
+    └── Insider-api-client-add.md
 ```
 
 ---
@@ -87,6 +100,10 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 | **commit** | `/Insider-commit` | Conventional Commits formatinda degisiklikleri gruplar, commit atar, push eder |
 | **ci** | `/Insider-ci` | GitHub Actions workflow tasariminda dogru pattern uygular; dis bagimlilık, matrix, artifact ve tetikleyici konfigürasyonunu yonetir |
 | **pre-commit** | `/Insider-pre-commit` | Projeden pre-commit hook altyapisini temiz sekilde kaldirir; bagli dosya ve skill referanslarini gunceller |
+| **api-test-run** | `/Insider-api-test-run` | API testlerini kosturur, HTTP hata tiplerini yorumlar, Allure raporu uretir |
+| **api-test-fix** | `/Insider-api-test-fix` | Fail olan API testini 7 kategoriye gore siniflandirir, kok nedenini bulur, fix uygular |
+| **api-scenario-generate** | `/Insider-api-scenario-generate` | ISTQB standartlarina uygun, duplikasyonsuz API pytest test metodlari uretir |
+| **api-client-add** | `/Insider-api-client-add` | Yeni API resource icin client, data builder ve conftest fixture'ini PetClient mimarisine uygun olusturur |
 
 ---
 
@@ -96,7 +113,7 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 Yeni test yazma:
   locator-extract → scenario-generate → test-run → test-fix
 
-Fail analizi:
+Fail analizi (UI):
   test-run → test-fix → report-analyze → bug-report
 
 Commit akisi:
@@ -107,6 +124,12 @@ Load test:
 
 CI/CD:
   ci (workflow tasarimi / yeni job ekleme)
+
+Yeni API resource:
+  api-client-add → api-scenario-generate → api-test-run → api-test-fix
+
+API fail analizi:
+  api-test-run → api-test-fix → bug-report
 ```
 
 ---

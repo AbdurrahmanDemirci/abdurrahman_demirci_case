@@ -33,6 +33,17 @@ Asagidaki kaliplar kodun her katmanina islenmi? olup yeni ozellik, sayfa veya or
 | **expected_content.py** | `data/expected_content.py` | Tum assertion sabitleri tek dosyada. Icerik degisimi = 1 dosya guncelleme. |
 | **GitHub Actions matrix** | `.github/workflows/tests.yml` | Chrome + Firefox CI'da tanimlı. Yeni browser = matrix'e 1 satir. |
 
+### API Test Katmani
+
+| Kalip | Nerede | Buyumeye Katkisi |
+|-------|--------|-----------------|
+| **BaseAPI mirasi** | `api_tests/api/base_api.py` | Yeni client = sadece `class XClient(BaseAPI)`. Session, headers, logging ucretsiz gelir. |
+| **PetBuilder pattern** | `api_tests/models/{resource}_model.py` | Her resource icin bagimsiz builder sinifi. `full()`, `minimal()`, `invalid_body()` static metodlar. |
+| **Response Schema** | `api_tests/schemas/{resource}_schema.py` | jsonschema ile strict kontrat dogrulama. Alan eklenmesi/kaldirilmasi aninda yakalanir. |
+| **Sabit repository** | `api_tests/data/{resource}_data.py` | `INVALID_`, `NEGATIVE_`, `VALID_` sabitleri tek yerde. Test metodunda hardcoded deger olmaz. |
+| **6-file test yapisi** | `api_tests/tests/test_{r}_{type}.py` | create/read/update/delete/lifecycle/negative — her dosya tek CRUD operasyonuna odakli. |
+| **conftest fixture zinciri** | `api_tests/conftest.py` | `client` (session) + `created_{resource}` (teardown). Test metodlari API temizligini yonetmez. |
+
 ### Load Test Katmani
 
 | Kalip | Nerede | Buyumeye Katkisi |
@@ -86,10 +97,28 @@ insiderone2/
 │   └── config.py               ← env-driven (BASE_URL, HEADLESS, EXPLICIT_WAIT …)
 ├── .env                        ← Lokal overrides (gitignored)
 ├── .env.example                ← Template
-├── .pre-commit-config.yaml     ← flake8 + trailing-whitespace
+├── api_tests/
+│   ├── api/
+│   │   └── base_api.py         ← BaseAPI: session, headers, _get/_post/_put/_delete + logging
+│   ├── client/
+│   │   └── pet_client.py       ← PetClient(BaseAPI): create, get_by_id, find_by_status, update, delete
+│   ├── models/
+│   │   └── pet_model.py        ← PetBuilder: full, minimal, without_name, without_photo_urls, invalid_body
+│   ├── schemas/
+│   │   └── pet_schema.py       ← PET_RESPONSE_SCHEMA (jsonschema, additionalProperties: false)
+│   ├── data/
+│   │   └── pet_data.py         ← VALID_STATUSES, INVALID_PET_ID, NEGATIVE_PET_ID, INVALID_STRING_ID
+│   ├── tests/
+│   │   ├── test_pet_create.py
+│   │   ├── test_pet_read.py
+│   │   ├── test_pet_update.py
+│   │   ├── test_pet_delete.py
+│   │   ├── test_pet_lifecycle.py
+│   │   └── test_pet_negative.py
+│   ├── conftest.py             ← client (session), created_pet (teardown fixture)
+│   └── config.py               ← API_BASE_URL, API_TIMEOUT (.env'den okunur)
 ├── Makefile                    ← Kısa komutlar
 ├── pytest.ini
-├── setup.cfg
 └── requirements.txt
 ```
 
