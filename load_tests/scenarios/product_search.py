@@ -79,7 +79,6 @@ class ProductSearchTasks(BaseTaskSet):
             )
 
 
-
 class ProductSearchUser(HttpUser):
     host      = BASE_URL
     weight    = 3
