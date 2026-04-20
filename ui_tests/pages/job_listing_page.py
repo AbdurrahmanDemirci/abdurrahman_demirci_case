@@ -23,6 +23,14 @@ class JobListingPage(BasePage):
         except Exception:
             return False
 
+    def click_first_apply_button(self) -> None:
+        """Two-step Lever flow: listing Apply → job detail → Apply for this job → form."""
+        self._click(L.leverPage_applyBtn)
+        self._click(L.leverPage_jobDetailApplyBtn)
+
+    def is_on_apply_form(self) -> bool:
+        return "/apply" in self.get_current_url()
+
     def get_all_job_details(self) -> list[dict]:
         """Returns position, department, and location for each job posting."""
         postings = self.driver.find_elements(*L.leverPage_jobItems_list)
