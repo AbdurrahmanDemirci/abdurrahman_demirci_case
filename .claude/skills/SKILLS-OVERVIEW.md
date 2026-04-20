@@ -43,13 +43,13 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 │   │   └── bug-report.md               ← /Insider-bug-report
 │   │
 │   ├── load-testing/
-│   │   └── load-test.md                ← /Insider-load-test
+│   │   ├── load-test.md                ← /Insider-load-test
+│   │   └── load-scenario-add.md        ← /Insider-load-scenario-add
 │   │
 │   ├── dev-ops/
 │   │   ├── commit.md                   ← /Insider-commit
 │   │   ├── code-clean.md               ← /Insider-code-clean
-│   │   ├── ci.md                       ← /Insider-ci
-│   │   └── pre-commit.md        ← /Insider-pre-commit
+│   │   └── ci.md                       ← /Insider-ci
 │   │
 │   ├── api-testing/
 │   │   ├── test-run.md                 ← /Insider-api-test-run
@@ -61,22 +61,24 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 │   │       └── api-test-strategy.md    ← Mevcut kapsam, smoke/regression stratejisi
 │   │
 │   └── ui-testing/                     ← Referans dokumanlari (slash komutu yok)
+│       ├── page-add.md                 ← /Insider-page-add
 │       ├── test-structure.md
 │       ├── data-layer.md
 │       └── flows-layer.md
 │
 └── commands/
     ├── Insider-locator-extract.md
+    ├── Insider-page-add.md
     ├── Insider-scenario-generate.md
     ├── Insider-test-run.md
     ├── Insider-test-fix.md
     ├── Insider-report-analyze.md
     ├── Insider-bug-report.md
     ├── Insider-load-test.md
+    ├── Insider-load-scenario-add.md
     ├── Insider-code-clean.md
     ├── Insider-commit.md
     ├── Insider-ci.md
-    ├── Insider-pre-commit.md
     ├── Insider-api-test-run.md
     ├── Insider-api-test-fix.md
     ├── Insider-api-scenario-generate.md
@@ -90,16 +92,17 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 | Skill | Slash Komutu | Ne Yapar |
 |-------|-------------|----------|
 | **locator-extract** | `/Insider-locator-extract` | URL/HTML/screenshot'tan proje konvansiyonuna uygun Selenium locator uretir, `*_locators.py`'e yazar |
+| **page-add** | `/Insider-page-add` | Yeni UI sayfasi icin locator dosyasi, Page Object sinifi ve gerekiyorsa SiteFlow metodunu 5-katmanli POM mimarisine uygun olusturur |
 | **scenario-generate** | `/Insider-scenario-generate` | ISTQB standartlarina uygun, duplikasyonsuz pytest test metodlari uretir |
 | **test-run** | `/Insider-test-run` | pytest testlerini kosturur, ciktiyi yorumlar, Allure raporu uretir |
 | **test-fix** | `/Insider-test-fix` | Fail olan testi kategorize eder (6 kategori), kok nedenini bulur, fix uygular |
-| **report-analyze** | `/Insider-report-analyze` | Allure/pytest raporunu okur, pattern tespit eder, aksiyon onerir |
+| **report-analyze** | `/Insider-report-analyze` | Allure/pytest raporunu okur (UI veya API context), pattern tespit eder, aksiyon onerir; Locust HTML raporunu da analiz eder |
 | **bug-report** | `/Insider-bug-report` | Bug vs Test Issue ayirt eder, yapısal bug raporu olusturur, `.generate/`'a yazar |
-| **load-test** | `/Insider-load-test` | n11.com search modulu load testini calistirir, sonuclari analiz eder |
+| **load-test** | `/Insider-load-test` | Locust load testini calistirir, P95 esigi analiz eder, sonuclari raporlar |
+| **load-scenario-add** | `/Insider-load-scenario-add` | Mevcut Locust mimarisine yeni HttpUser + TaskSet senaryosu ekler; data, validator ve __init__ kaydini gunceller |
 | **code-clean** | `/Insider-code-clean` | Commit oncesi Python format ve mimari kural kontrolu yapar, duzeltir |
 | **commit** | `/Insider-commit` | Conventional Commits formatinda degisiklikleri gruplar, commit atar, push eder |
 | **ci** | `/Insider-ci` | GitHub Actions workflow tasariminda dogru pattern uygular; dis bagimlilık, matrix, artifact ve tetikleyici konfigürasyonunu yonetir |
-| **pre-commit** | `/Insider-pre-commit` | Projeden pre-commit hook altyapisini temiz sekilde kaldirir; bagli dosya ve skill referanslarini gunceller |
 | **api-test-run** | `/Insider-api-test-run` | API testlerini kosturur, HTTP hata tiplerini yorumlar, Allure raporu uretir |
 | **api-test-fix** | `/Insider-api-test-fix` | Fail olan API testini 7 kategoriye gore siniflandirir, kok nedenini bulur, fix uygular |
 | **api-scenario-generate** | `/Insider-api-scenario-generate` | ISTQB standartlarina uygun, duplikasyonsuz API pytest test metodlari uretir |
@@ -110,23 +113,23 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 ## Skill Zincirleri
 
 ```
-Yeni UI testi yazma:
-  locator-extract → scenario-generate → test-run → test-fix
+Yeni UI sayfasi ekleme:
+  locator-extract → page-add → scenario-generate → test-run → test-fix
 
 UI fail analizi:
-  test-run → test-fix → report-analyze → bug-report
+  test-run → test-fix → report-analyze [UI context] → bug-report
 
 Yeni API resource:
   api-client-add → api-scenario-generate → api-test-run → api-test-fix
 
 API fail analizi:
-  api-test-run → api-test-fix → report-analyze → bug-report
+  api-test-run → api-test-fix → report-analyze [API context] → bug-report
+
+Yeni load senaryosu:
+  load-scenario-add → load-test → report-analyze [Locust bolumu]
 
 Commit akisi (hepsi icin):
   code-clean → commit
-
-Load test:
-  load-test → report-analyze (Locust bolumu)
 
 CI/CD:
   ci (workflow tasarimi / yeni job ekleme)
@@ -137,15 +140,17 @@ CI/CD:
 | Sorun | Skill |
 |-------|-------|
 | Yeni UI elementi lazim | `/Insider-locator-extract` |
+| Yeni UI sayfasi ekleyecegim | `/Insider-page-add` |
 | Yeni UI test yazacagim | `/Insider-scenario-generate` |
 | UI testleri fail oluyor | `/Insider-test-fix` |
 | Yeni API resource ekleyecegim | `/Insider-api-client-add` |
 | API test yazacagim | `/Insider-api-scenario-generate` |
 | API testleri fail oluyor | `/Insider-api-test-fix` |
+| Yeni load senaryosu ekleyecegim | `/Insider-load-scenario-add` |
+| Load test calistiracagim | `/Insider-load-test` |
 | Test raporunu analiz etmek istiyorum | `/Insider-report-analyze` |
 | Bug raporu yazmak istiyorum | `/Insider-bug-report` |
 | Commit atacagim | `/Insider-commit` |
-| Load test calistiracagim | `/Insider-load-test` |
 | CI/CD degisiklik yapacagim | `/Insider-ci` |
 
 ---
@@ -191,7 +196,7 @@ Yeni kod yazarken her skill su soruyu sorar:
 
 | Durum | Ne Guncellenmeli |
 |-------|-----------------|
-| Yeni skill eklendi | Bu dosya (dosya yapisi + ozet tablo) |
+| Yeni skill eklendi | Bu dosya (dosya yapisi + ozet tablo + zincirler) |
 | Yeni referans dosyasi | Bu dosya + ilgili skill'in referanslar bolumu |
 | Proje dizini / komut degisti | `project-config.md` |
 | Yeni browser destegi | `project-config.md` + `conftest.py` |
