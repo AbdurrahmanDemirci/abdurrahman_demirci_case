@@ -35,7 +35,7 @@ assert 200 in (400, 404, 405)
 
 **Fix Stratejisi:**
 1. Hangi endpoint ve metod (GET/POST/PUT/DELETE) fail etti tespit et
-2. `api_tests/tests/test_pet.py` ilgili testi oku — beklenti ne?
+2. Ilgili test dosyasini oku — 6-file yapisi: `api_tests/tests/test_pet_{create|read|update|delete|lifecycle|negative}.py`
 3. Gercek response'u incele: `resp.text` mesajina bak (stack trace'de varsa)
 4. Karar matrisi:
    - Beklenti yanlis, API dogru → testi guncelle (yeni status kodu ekle veya degistir)
@@ -45,6 +45,7 @@ assert 200 in (400, 404, 405)
 
 **Dikkat:** Petstore bazi senaryolarda standart HTTP kodlarini vermez.
 Mevcut testte yorumlar var (`# Petstore returns 404 instead of 400`) — bu yorum pattern'ini koru.
+Petstore'un bilinen davranislarinin tam listesi: `references/api-test-strategy.md` → "Petstore API Bilinen Davranislar" tablosu.
 
 ---
 
@@ -59,7 +60,7 @@ assert body["status"] == "available" — body["status"] is "pending"
 
 **Fix Stratejisi:**
 1. Hangi alan fail etti tespit et
-2. `api_tests/data/pet_data.py`'deki `build_pet()` ile gonulen payload'i kontrol et
+2. `api_tests/models/pet_model.py`'deki `PetBuilder` metodlarini kontrol et — hangi builder kullanilmis?
 3. Donulen response schema'yi anlamak icin:
    ```bash
    # Endpoint'i curl ile test et (dogrudan)
@@ -85,7 +86,7 @@ ERROR api_tests/conftest.py::created_pet — setup failed
 
 **Fix Stratejisi:**
 1. `api_tests/conftest.py`'deki `created_pet` fixture'ini oku
-2. `build_pet()` payload'ini kontrol et — zorunlu alan eksik mi?
+2. `PetBuilder.full()` payload'ini kontrol et — zorunlu alan eksik mi?
    ```bash
    grep -n "def " api_tests/models/pet_model.py
    ```
@@ -95,7 +96,7 @@ ERROR api_tests/conftest.py::created_pet — setup failed
    ```
 4. ID catismasi: `int(time.time() * 1000) % 10**9` dogru ID uretimi sagliyor mu?
 5. Fixture'da `yield` oncesi assert fail → tum bagimli testler ERROR olarak isaretlenir
-   → Once `test_01_create_pet` calisiyor mu kontrol et (izole calistir)
+   → Once `test_create_pet_returns_200_and_correct_fields` calisiyor mu kontrol et (izole calistir)
 
 ---
 
@@ -176,10 +177,11 @@ assert body["name"] == "TestPet"  →  body["name"] == "SomeoneElsesPet"
 1. Petstore Swagger UI'da guncel schema bak:
    `https://petstore.swagger.io/#/pet`
 2. Degisen alanlari tespit et
-3. `api_tests/data/pet_data.py` → `build_pet()` fonksiyonunu guncelle
-4. `api_tests/client/pet_client.py` → URL degistiyse URL'i guncelle
-5. Etkilenen tum test assertionlarini guncelle
-6. Kontrat degisimi buyukse (`/Insider-api-client-add` ile yeni resource mimarisi kur)
+3. `api_tests/models/pet_model.py` → `PetBuilder` metodlarini guncelle (alan tipi veya yeni zorunlu alan)
+4. `api_tests/schemas/pet_schema.py` → `PET_RESPONSE_SCHEMA`'yi guncelle (yeni/degisen alan)
+5. `api_tests/client/pet_client.py` → URL degistiyse URL'i guncelle
+6. Etkilenen tum test assertionlarini guncelle
+7. Kontrat degisimi buyukse (`/Insider-api-client-add` ile yeni resource mimarisi kur)
 
 ---
 
@@ -191,8 +193,9 @@ assert body["name"] == "TestPet"  →  body["name"] == "SomeoneElsesPet"
 # Fail ciktisini topla
 pytest api_tests/tests/ -v -p no:rerunfailures 2>&1 | tail -50
 
-# Tek fail testi izole calistir
-pytest api_tests/tests/test_pet.py::TestPetCrud::{test_metodu} -v -s
+# Tek fail testi izole calistir (6-file yapisi — hangi dosyada oldugunu bul)
+grep -rn "def {test_metodu}" api_tests/tests/
+pytest api_tests/tests/test_pet_{create|read|update|delete|lifecycle|negative}.py::Test{Class}::{test_metodu} -v -s
 ```
 
 Yukaridaki 7 kategoriden hangisine girdigini tespit et.
@@ -200,10 +203,16 @@ Yukaridaki 7 kategoriden hangisine girdigini tespit et.
 ### Adim 2: Bilgi Toplama
 
 ```bash
-# Ilgili testi oku
+# Ilgili testi bul ve oku (6-file yapisi)
 grep -rn "def {test_metodu}" api_tests/tests/
 
-# Data builder'i oku
+# Model builder'i oku
+cat api_tests/models/pet_model.py
+
+# Schema'yi oku
+cat api_tests/schemas/pet_schema.py
+
+# Data sabitlerini oku
 cat api_tests/data/pet_data.py
 
 # Client metodunu oku

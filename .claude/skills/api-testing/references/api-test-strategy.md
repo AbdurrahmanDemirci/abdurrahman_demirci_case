@@ -7,7 +7,7 @@
 
 ## Mevcut Kapsam
 
-### Pet API — 6 dosya, 15 test
+### Pet API — 6 dosya, 18 test
 
 | Dosya | Test Metodlari | HTTP | Tip | Marker |
 |-------|----------------|------|-----|--------|
@@ -18,17 +18,20 @@
 | `test_pet_read.py` | test_find_by_valid_status_returns_200[pending] | GET /pet/findByStatus | Pozitif (param) | regression |
 | `test_pet_read.py` | test_find_by_valid_status_returns_200[sold] | GET /pet/findByStatus | Pozitif (param) | regression |
 | `test_pet_update.py` | test_update_pet_returns_200_with_updated_fields | PUT /pet | Pozitif | regression |
+| `test_pet_update.py` | test_update_pet_persists_on_get | PUT → GET /pet/{id} | State Transition | regression |
 | `test_pet_delete.py` | test_delete_pet_returns_200_then_get_returns_404 | DELETE /pet/{id} | Pozitif + State | smoke, regression |
+| `test_pet_delete.py` | test_delete_pet_is_idempotent | DELETE × 2 /pet/{id} | Idempotency | regression |
 | `test_pet_lifecycle.py` | test_full_pet_lifecycle | POST+GET+PUT+GET+DELETE+GET | E2E | smoke, regression |
 | `test_pet_negative.py` | test_get_nonexistent_pet_returns_404 | GET /pet/{id} | Negatif | regression |
+| `test_pet_negative.py` | test_get_pet_with_negative_id_returns_error | GET /pet/-1 | Negatif (BVA) | regression |
 | `test_pet_negative.py` | test_get_pet_with_string_id_returns_client_error | GET /pet/{id} | Negatif (tip) | regression |
 | `test_pet_negative.py` | test_create_pet_with_no_body_returns_error | POST /pet | Negatif | regression |
 | `test_pet_negative.py` | test_update_with_invalid_id_type_returns_error | PUT /pet | Negatif (tip) | regression |
 | `test_pet_negative.py` | test_delete_nonexistent_pet_returns_404 | DELETE /pet/{id} | Negatif | regression |
 | `test_pet_negative.py` | test_find_by_invalid_status_returns_empty_list | GET /pet/findByStatus | Negatif | regression |
 
-**Toplam**: 15 test (4 smoke + 15 regression — overlap var)
-**Coverage**: Tum CRUD + findByStatus pozitif + negatif + E2E lifecycle + schema validation
+**Toplam**: 18 test (4 smoke + 18 regression — overlap var)
+**Coverage**: Tum CRUD + findByStatus + persistence verify + idempotency + BVA negatif ID + E2E lifecycle + schema validation + Content-Type inline
 
 ---
 
@@ -41,18 +44,19 @@
 | GET id ile pozitif + schema | ✓ test_get_pet_by_id... | — |
 | GET findByStatus parametrize | ✓ test_find_by_valid_status... | — |
 | PUT pozitif + schema | ✓ test_update_pet... | — |
-| PUT persistence verify | — | Henuz yazilmadi |
+| PUT persistence verify | ✓ test_update_pet_persists_on_get | — |
 | DELETE 200 + GET 404 | ✓ test_delete_pet... | — |
+| DELETE idempotency | ✓ test_delete_pet_is_idempotent | — |
 | E2E lifecycle | ✓ test_full_pet_lifecycle | — |
 | GET var olmayan ID — 404 | ✓ test_get_nonexistent... | — |
 | GET string ID — 400/404 | ✓ test_get_pet_with_string_id... | — |
-| GET negatif ID (-1) | — | Henuz yazilmadi |
+| GET negatif ID (-1) | ✓ test_get_pet_with_negative_id... | — |
 | POST bos body — 4xx | ✓ test_create_pet_with_no_body... | — |
 | PUT gecersiz ID tipi — 4xx | ✓ test_update_with_invalid_id_type... | — |
 | DELETE var olmayan — 404 | ✓ test_delete_nonexistent... | — |
 | findByStatus gecersiz deger | ✓ test_find_by_invalid_status... | — |
 
-**Mevcut**: 13/15 kategori karsilandi. Eksik: persistence verify + negatif ID (-1).
+**Mevcut**: 16/15 (baselines) — Tum kategoriler karsilandi + DELETE idempotency bonus.
 
 ---
 

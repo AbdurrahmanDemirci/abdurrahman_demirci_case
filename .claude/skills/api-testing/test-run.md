@@ -75,9 +75,9 @@ API_BASE_URL=https://petstore.swagger.io/v2 API_TIMEOUT=15 pytest api_tests/test
 
 **Basarili cikti:**
 ```
-PASSED api_tests/tests/test_pet.py::TestPetCrud::test_01_create_pet_returns_200_and_correct_fields
-PASSED api_tests/tests/test_pet.py::TestPetCrud::test_02_get_pet_by_id_returns_correct_pet
-13 passed in 4.21s
+PASSED api_tests/tests/test_pet_create.py::TestPetCreate::test_create_pet_returns_200_and_correct_fields
+PASSED api_tests/tests/test_pet_read.py::TestPetRead::test_get_pet_by_id_returns_correct_pet
+18 passed in 6.84s
 ```
 
 **Basarisiz — HTTP Status Mismatch:**
@@ -142,10 +142,10 @@ allure generate automation-test-results/api/allure-results --clean -o automation
 
 - **Suite**: Full / Smoke / Regression
 - **Endpoint Grubu**: Pet API
-- **Toplam**: 15 test (6 dosya)
-- **Basarili**: 12
+- **Toplam**: 18 test (6 dosya)
+- **Basarili**: 17
 - **Basarisiz**: 1
-- **Pass Rate**: %92
+- **Pass Rate**: %94
 
 ### Basarisiz Testler:
 1. test_10_delete_nonexistent_pet_returns_404

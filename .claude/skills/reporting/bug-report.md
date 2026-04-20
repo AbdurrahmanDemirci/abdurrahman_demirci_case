@@ -8,7 +8,12 @@
 ## Referanslar
 
 - `../project-config.md` → Proje ve ortam bilgisi
-- `../test-execution/test-fix.md` → Failure kategori tanimlari
+- `../test-execution/test-fix.md` → UI failure kategori tanimlari (Selenium/browser hatalar)
+- `../api-testing/test-fix.md` → API failure kategori tanimlari (HTTP/contract hatalar)
+
+**Hangi test tipini raporluyorsun?**
+- UI bug → test-execution/test-fix.md kategorilerini uygula
+- API bug → api-testing/test-fix.md kategorilerini uygula (HTTP Status Mismatch, Response Field, API Kontrat Degisimi)
 
 ---
 

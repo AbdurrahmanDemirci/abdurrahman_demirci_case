@@ -46,9 +46,17 @@ Tavsiye edilen alan: `scope` — degisen katmayi (layer) belirtir.
 | `ui_tests/conftest.py` | `conftest` |
 | `ui_tests/config.py` | `config` |
 | `utils/**` | `utils` |
+| `api_tests/tests/**` | `api-tests` |
+| `api_tests/client/**` | `api-client` |
+| `api_tests/models/**` | `api-models` |
+| `api_tests/schemas/**` | `api-schemas` |
+| `api_tests/data/**` | `api-data` |
+| `api_tests/conftest.py` | `api-conftest` |
+| `api_tests/config.py` | `api-config` |
+| `api_tests/api/**` | `api-base` |
+| `load_tests/**` | `load` |
 | `.github/workflows/**` | `ci` |
 | `pytest.ini`, `setup.cfg`, `requirements.txt`, `Makefile` | `config` |
-| `.pre-commit-config.yaml` | `config` |
 | `.claude/**` | `claude` |
 
 **NOT**: Birden fazla scope etkileniyorsa AYRI commit olur. Tek commit'te birden fazla scope karistirilmaz.
@@ -79,6 +87,12 @@ Tavsiye edilen alan: `scope` — degisen katmayi (layer) belirtir.
 | Dependency guncellendi | `chore(config): upgrade selenium to 4.20.0` |
 | CI degisti | `ci: add firefox to browser test matrix` |
 | Skill eklendi | `docs(claude): add conventional commits skill` |
+| API test eklendi | `test(api-tests): add pet update persistence verify test` |
+| API client metodu eklendi | `feat(api-client): add find_by_status method to pet client` |
+| API schema guncellendi | `fix(api-schemas): add tags field to pet response schema` |
+| API model builder guncellendi | `feat(api-models): add without_photo_urls builder method` |
+| API data sabiti eklendi | `feat(api-data): add NEGATIVE_PET_ID constant for BVA test` |
+| Load senaryo eklendi | `feat(load): add category search scenario with smoke tag` |
 | Makefile guncellendi | `chore(config): add ui-smoke make target` |
 
 ---

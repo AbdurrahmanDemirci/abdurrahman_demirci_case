@@ -110,27 +110,43 @@ InsiderOne QA Assessment projesi icin tasarlanmis, buyumeye acik bir skill mimar
 ## Skill Zincirleri
 
 ```
-Yeni test yazma:
+Yeni UI testi yazma:
   locator-extract → scenario-generate → test-run → test-fix
 
-Fail analizi (UI):
+UI fail analizi:
   test-run → test-fix → report-analyze → bug-report
-
-Commit akisi:
-  code-clean → commit
-
-Load test:
-  load-test (bagimsiz)
-
-CI/CD:
-  ci (workflow tasarimi / yeni job ekleme)
 
 Yeni API resource:
   api-client-add → api-scenario-generate → api-test-run → api-test-fix
 
 API fail analizi:
-  api-test-run → api-test-fix → bug-report
+  api-test-run → api-test-fix → report-analyze → bug-report
+
+Commit akisi (hepsi icin):
+  code-clean → commit
+
+Load test:
+  load-test → report-analyze (Locust bolumu)
+
+CI/CD:
+  ci (workflow tasarimi / yeni job ekleme)
 ```
+
+### Hangi Sorun → Hangi Skill?
+
+| Sorun | Skill |
+|-------|-------|
+| Yeni UI elementi lazim | `/Insider-locator-extract` |
+| Yeni UI test yazacagim | `/Insider-scenario-generate` |
+| UI testleri fail oluyor | `/Insider-test-fix` |
+| Yeni API resource ekleyecegim | `/Insider-api-client-add` |
+| API test yazacagim | `/Insider-api-scenario-generate` |
+| API testleri fail oluyor | `/Insider-api-test-fix` |
+| Test raporunu analiz etmek istiyorum | `/Insider-report-analyze` |
+| Bug raporu yazmak istiyorum | `/Insider-bug-report` |
+| Commit atacagim | `/Insider-commit` |
+| Load test calistiracagim | `/Insider-load-test` |
+| CI/CD degisiklik yapacagim | `/Insider-ci` |
 
 ---
 

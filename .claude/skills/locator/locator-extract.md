@@ -53,20 +53,12 @@ Ilgili `*_locators.py` dosyasini oku:
 
 ### Adim 3: CSS Selector Oncelik Sirasi
 
-`locator-strategy.md`'deki kurala gore en stabil selector'i sec:
+> Tam kural seti ve ornekler: `references/locator-strategy.md` → "CSS mi, XPath mi?" bolumu
 
-```
-1. ID          → By.CSS_SELECTOR, "#element-id"
-2. data-*      → By.CSS_SELECTOR, "[data-department='Quality Assurance']"
-3. CSS class   → By.CSS_SELECTOR, ".insiderone-icon-cards-grid"
-4. href        → By.CSS_SELECTOR, "a[href='/careers/']"
-5. XPath       → By.XPATH — SADECE metin eslestirme gerektiginde
-```
+**Oncelik sirasi** (en kararli → en kirigan):
+`ID` → `data-*` → `CSS class` → `href` → `XPath` (sadece metin eslestirme)
 
-**Kacin**:
-- Pozisyona dayali: `div:nth-child(3)`, `//div[3]/ul/li[2]`
-- Dinamik class: `.elementor-repeater-item-56ca501`
-- Cok genel: `button`, `div`, `span`
+Kacin: pozisyon bazli (`nth-child`, `//div[3]`), dinamik class (`.elementor-repeater-item-56ca501`), cok genel tag (`button`, `div`).
 
 ### Adim 4: Locator Key Isimlendir
 

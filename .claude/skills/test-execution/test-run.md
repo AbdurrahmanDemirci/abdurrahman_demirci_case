@@ -112,12 +112,12 @@ PASSED (rerun 1)
 ### Adim 4: Allure Raporu Uret
 
 ```bash
-allure serve automation-test-results/allure-results/
+allure serve automation-test-results/ui/allure-results/
 ```
 
 Veya HTML olarak kaydet:
 ```bash
-allure generate automation-test-results/allure-results/ -o automation-test-results/allure-report/ --clean
+allure generate automation-test-results/ui/allure-results/ -o automation-test-results/ui/allure-report/ --clean
 ```
 
 ---

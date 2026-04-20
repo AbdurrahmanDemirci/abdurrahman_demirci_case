@@ -176,10 +176,16 @@ test_NN_açıklama
 
 | Değişken | Varsayılan | Açıklama |
 |----------|-----------|----------|
+| `BASE_URL` | `https://insiderone.com` | UI test hedef URL |
 | `BROWSER` | `chrome` | Varsayılan browser (chrome / firefox) |
 | `HEADLESS` | `false` | Headless mod |
-| `BASE_URL` | `https://insiderone.com` | Ana sayfa URL |
 | `EXPLICIT_WAIT` | `30` | Selenium bekleme süresi (saniye) |
+| `API_BASE_URL` | `https://petstore.swagger.io/v2` | API test hedef URL |
+| `API_TIMEOUT` | `10` | HTTP request timeout (saniye) |
+| `LOAD_TEST_ENV` | `production` | Load test ortamı (production / staging / local) |
+| `P95_THRESHOLD_MS` | `3000` | P95 yanıt süresi uyarı eşiği (ms) |
+| `THINK_TIME_MIN` | `2` | Locust minimum think time (saniye) |
+| `THINK_TIME_MAX` | `5` | Locust maksimum think time (saniye) |
 
 ---
 
@@ -199,3 +205,5 @@ test_NN_açıklama
 | Test Türü | Site |
 |-----------|------|
 | UI | https://insiderone.com |
+| API | https://petstore.swagger.io/v2 |
+| Load | https://www.n11.com |

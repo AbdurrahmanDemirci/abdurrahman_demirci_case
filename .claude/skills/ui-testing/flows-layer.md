@@ -79,4 +79,4 @@ def test_03_qa_jobs_listed(self):
 
 1. `ui_tests/flows/site_flow.py`'e metod ekle
 2. Metodun döndürdüğü page object'i type hint'e yaz
-3. Bu dosyayı güncelle
+3. `ui-testing/flows-layer.md`'i yeni metodun ornegi ile guncelle

@@ -239,6 +239,8 @@ INVALID_STRING_ID: str = "not-a-valid-id"
 Mevcut fixture'larin ALTINA ekle:
 
 ```python
+from collections.abc import Generator
+
 from api_tests.client.{resource}_client import {Resource}Client
 from api_tests.models.{resource}_model import {Resource}Builder
 
@@ -249,7 +251,7 @@ def {resource}_client() -> {Resource}Client:
 
 
 @pytest.fixture
-def created_{resource}({resource}_client: {Resource}Client) -> dict:
+def created_{resource}({resource}_client: {Resource}Client) -> Generator[dict, None, None]:
     payload = {Resource}Builder.full()
     resp = {resource}_client.create(payload)
     assert resp.status_code == 200, f"{Resource} creation failed: {resp.text}"
@@ -263,6 +265,9 @@ def created_{resource}({resource}_client: {Resource}Client) -> dict:
 - `created_{resource}` → `scope` belirtme (varsayilan = function; her test icin temiz resource)
 - Teardown: `yield` sonrasinda delete — API temizligi garanti altinda
 - `{Resource}Builder.full()` kullan, hardcoded payload OLMAZ
+- **`yield` kullanan fixture** → donus tipi `Generator[dict, None, None]`, asla `-> dict` degil
+  - `from collections.abc import Generator` import ZORUNLU
+  - `Generator[yield_type, send_type, return_type]` — fixture'larda send ve return her zaman `None`
 
 ---
 

@@ -136,11 +136,18 @@ tests.yml
 │   ├── path trigger: ui_tests/**, requirements.txt
 │   └── artifact: allure-results-ui-{browser} (7 gun)
 │
+├── api-tests
+│   ├── continue-on-error: false   ← kendi API testimiz (Petstore public, kararsiz ama kendi kontrolumuzde)
+│   ├── path trigger: api_tests/**, requirements.txt
+│   └── artifact: allure-results-api (7 gun)
+│
 └── load-tests
     ├── continue-on-error: true    ← dis site (n11.com) bloklayabilir
     ├── path trigger: load_tests/**, locust.conf
     └── artifact: locust-results (7 gun)
 ```
+
+**Paralel calisma**: 4 job ayni anda baslar — ui-chrome, ui-firefox, api-tests, load-tests. Toplam CI suresi en yavash job kadar (genellikle UI ~4dk).
 
 ---
 

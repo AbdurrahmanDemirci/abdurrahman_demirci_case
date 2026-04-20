@@ -8,7 +8,13 @@
 ## Referanslar
 
 - `../project-config.md` → Rapor dizin yapisi
-- `../test-execution/test-fix.md` → Failure kategori tanimlari
+- `../test-execution/test-fix.md` → UI failure kategori tanimlari (6 kategori)
+- `../api-testing/test-fix.md` → API failure kategori tanimlari (7 kategori)
+
+**Hangi raporu analiz ediyorsun?**
+- UI testi → `automation-test-results/ui/allure-results/` → failure kategorileri: `test-execution/test-fix.md`
+- API testi → `automation-test-results/api/allure-results/` → failure kategorileri: `api-testing/test-fix.md`
+- Load testi → `automation-test-results/locust/locust_report.html` → bkz. "Locust Raporu Analizi" bolumu
 
 ---
 
@@ -27,11 +33,13 @@ Kullanici su kaynaklardan birini saglar:
 
 **Allure JSON dosyalari:**
 ```bash
-# Result dosyalarini listele
-ls automation-test-results/allure-results/
+# UI raporu
+ls automation-test-results/ui/allure-results/
+find automation-test-results/ui/allure-results/ -name "*-result.json"
 
-# JSON result'lari oku
-find automation-test-results/allure-results/ -name "*-result.json"
+# API raporu
+ls automation-test-results/api/allure-results/
+find automation-test-results/api/allure-results/ -name "*-result.json"
 ```
 
 **Allure result JSON yapisi:**
@@ -80,13 +88,15 @@ Her fail olan test icin:
 2. **Hata mesaji** (statusDetails.message'in ilk satiri)
 3. **Fail olan satir** (stack trace'den)
 4. **Screenshot** — `automation-test-results/screenshots/` altinda var mi?
-5. **Hata kategorisi** (`test-fix.md` kategorilerine gore):
-   - Locator Gecersiz
-   - Element Kaldirildi
-   - Timing / Wait Sorunu
-   - Assertion Fail — Icerik Degismis
-   - Sayfa Akisi Degismis
-   - Site Bug
+5. **Hata kategorisi:**
+
+   *UI test raporu icin* (`test-execution/test-fix.md` — 6 kategori):
+   - Locator Gecersiz | Element Kaldirildi | Timing/Wait Sorunu
+   - Assertion Fail — Icerik Degismis | Sayfa Akisi Degismis | Site Bug
+
+   *API test raporu icin* (`api-testing/test-fix.md` — 7 kategori):
+   - HTTP Status Mismatch | Response Field Hatasi | Fixture Kurulum Hatasi
+   - Baglanti Hatasi | Timeout | Veri Catismasi | API Kontrat Degisimi
 
 ### Adim 4: Pattern Tespiti
 

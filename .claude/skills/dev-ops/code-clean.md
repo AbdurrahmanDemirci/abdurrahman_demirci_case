@@ -28,6 +28,7 @@ git diff --name-only --staged
 
 Degisen dosyalar taranir. Kapsam:
 - `ui_tests/**/*.py`
+- `api_tests/**/*.py`
 - `load_tests/**/*.py`
 - `conftest.py`
 
@@ -141,6 +142,88 @@ btn1, acceptButton, COOKIE_BTN, careers_filter
 - **Gereksiz yorum**: Sadece kodu tekrar eden yorumlar (`# click the button` gibi) — sil
 - **Magic number**: Test kodunda aciklamasiz sabit sayi varsa `expected_content.py`'e tasi
 - **Type hint tutarliligi**: Mevcut metodlarda tip hint varsa yeni metodlarda da olmali
+
+---
+
+## Adim 2b: API Katman Kurallari (`api_tests/**`)
+
+### Kural A: client/ icinde raw HTTP yasak
+
+`api_tests/client/**` icinde `requests.get(...)`, `requests.Session()` direkt cagrisi OLMAMALI:
+
+```python
+# YANLIS — client dosyasinda:
+resp = requests.get(f"{BASE_URL}/pet/{pet_id}")
+
+# DOGRU — BaseAPI metodlarini kullan:
+return self._get(f"/pet/{pet_id}")
+```
+
+### Kural B: Test dosyasinda hardcoded payload yasak
+
+`api_tests/tests/**` icinde duz dict payload OLMAMALI, `{Resource}Builder` kullanilmali:
+
+```python
+# YANLIS:
+payload = {"id": 12345, "name": "Buddy", "status": "available", "photoUrls": []}
+
+# DOGRU:
+payload = PetBuilder.full(name="Buddy", status="available")
+```
+
+### Kural C: Test dosyasinda hardcoded ID yasak
+
+`api_tests/tests/**` icinde sabit ID sayisi OLMAMALI, `data/{resource}_data.py` sabitleri kullanilmali:
+
+```python
+# YANLIS:
+resp = self.client.get_by_id(999999999999)
+
+# DOGRU:
+from api_tests.data.pet_data import INVALID_PET_ID
+resp = self.client.get_by_id(INVALID_PET_ID)
+```
+
+### Kural D: Pozitif testlerde schema dogrulama zorunlu
+
+`api_tests/tests/test_{resource}_{create|read|update}.py` icindeki 200 donduran her pozitif test `validate(instance=body, schema=...)` cagirmali:
+
+```python
+# ZORUNLU — her pozitif test dosyasinda:
+from jsonschema import validate
+from api_tests.schemas.pet_schema import PET_RESPONSE_SCHEMA
+
+validate(instance=body, schema=PET_RESPONSE_SCHEMA)
+```
+
+Eksikse: testi guncelle, validate cagrisi ekle.
+
+---
+
+### Kural 6: yield Kullanan Fixture Donus Tipi
+
+`@pytest.fixture` icinde `yield` varsa donus tipi `-> dict` / `-> webdriver.Remote` OLMAZ:
+
+```python
+# YANLIS — Pylance sarı cizgi:
+@pytest.fixture
+def created_pet(client: PetClient) -> dict:
+    ...
+    yield pet
+
+# DOGRU:
+from collections.abc import Generator
+
+@pytest.fixture
+def created_pet(client: PetClient) -> Generator[dict, None, None]:
+    ...
+    yield pet
+```
+
+**Kural**: `yield` li her fixture → `Generator[YieldType, None, None]`
+- `YieldType`: fixture'in yield ettigi deger tipi (`dict`, `webdriver.Remote`, ...)
+- `send_type` ve `return_type`: pytest fixture'larinda her zaman `None`
+- `from collections.abc import Generator` — Python 3.9+, harici paket gerekmez
 
 ---
 
