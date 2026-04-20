@@ -177,6 +177,26 @@ Page     : eylem → go_to_X(), click_X()
 
 ---
 
+## Ortam Değişkenleri
+
+> Tüm değişkenler **zorunludur** — eksik değişken `None` döner ve test crash eder. Hiçbir `config.py`'de default değer kullanılmaz.
+
+| Değişken | Örnek | Açıklama |
+|----------|-------|----------|
+| `BASE_URL` | `https://insiderone.com` | UI hedef URL |
+| `BROWSER` | `chrome` | `chrome` / `firefox` |
+| `HEADLESS` | `false` | `true` / `false` |
+| `EXPLICIT_WAIT` | `30` | Selenium wait (saniye) |
+| `API_BASE_URL` | `https://petstore.swagger.io/v2` | API hedef URL |
+| `API_TIMEOUT` | `10` | HTTP timeout (saniye) |
+| `LOAD_TEST_ENV` | `production` | `production` / `staging` / `local` |
+| `MIN_RESPONSE_BODY_SIZE` | `500` | Minimum response body boyutu (byte) |
+| `P95_THRESHOLD_MS` | `3000` | P95 eşiği (ms) |
+| `THINK_TIME_MIN` | `2` | Locust min think time (saniye) |
+| `THINK_TIME_MAX` | `5` | Locust max think time (saniye) |
+
+---
+
 ## Önemli Kurallar
 
 1. Commit atmadan önce `/Insider-code-clean` çalıştır
@@ -186,3 +206,4 @@ Page     : eylem → go_to_X(), click_X()
 5. `BaseAPI` metodlarını (`_get`, `_post`, vb.) client sınıflarında yeniden yazma
 6. Test assertion sabitleri `data/expected_content.py`'e gider, test dosyasına hardcode etme
 7. Load test verisi `load_tests/data/` katmanına gider, senaryo dosyasına hardcode etme
+8. `os.getenv("KEY")` çağrısı asla default almaz — yeni env var eklendiyse `.env`, `.env.example` ve `project-config.md` tablosunu güncelle
