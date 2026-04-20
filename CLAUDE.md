@@ -77,6 +77,60 @@ load_tests/
 
 ---
 
+## Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      TEST FRAMEWORK                              │
+│                                                                  │
+│  ┌────────────────┐  ┌────────────────┐  ┌──────────────────┐   │
+│  │   UI Tests     │  │   API Tests    │  │   Load Tests     │   │
+│  │                │  │                │  │                  │   │
+│  │ 1. locators/   │  │ api/           │  │ config.py        │   │
+│  │ 2. pages/      │  │ client/        │  │ data/            │   │
+│  │ 3. flows/      │  │ models/        │  │ scenarios/       │   │
+│  │ 4. data/       │  │ schemas/       │  │ utils/           │   │
+│  │ 5. tests/      │  │ data/ tests/   │  │ locustfile.py    │   │
+│  └───────┬────────┘  └───────┬────────┘  └────────┬─────────┘   │
+│          │                   │                     │             │
+│  ┌───────▼───────────────────▼─────────────────────▼──────────┐  │
+│  │              pytest / Locust runner                         │  │
+│  └───────────────────────────┬────────────────────────────────┘  │
+│                               │                                  │
+│  ┌────────────────────────────▼────────────────────────────────┐  │
+│  │  automation-test-results/                                    │  │
+│  │    ui/allure-results/   api/allure-results/   locust/html   │  │
+│  └────────────────────────────┬────────────────────────────────┘  │
+└───────────────────────────────┼──────────────────────────────────┘
+                                │
+              ┌─────────────────▼─────────────────┐
+              │         GitHub Actions CI           │
+              │   chrome × firefox + API + Load    │
+              │   (paralel job'lar, 7-day artifact)│
+              └───────────────────────────────────┘
+```
+
+## Skill Workflow Diagram
+
+```
+Yeni UI Sayfası:
+  /Insider-locator-extract → /Insider-page-add → /Insider-scenario-generate
+    → /Insider-test-run → [fail?] /Insider-test-fix → /Insider-code-clean
+    → /Insider-commit
+
+Yeni API Resource:
+  /Insider-api-client-add → /Insider-api-scenario-generate
+    → /Insider-api-test-run → [fail?] /Insider-api-test-fix → /Insider-code-clean
+    → /Insider-commit
+
+Yeni Load Senaryosu:
+  /Insider-load-scenario-add → /Insider-load-test
+    → /Insider-report-analyze → /Insider-code-clean → /Insider-commit
+
+Her commit için:
+  /Insider-code-clean → /Insider-commit
+```
+
 ## Skill Sistemi
 
 Tüm slash komutları `.claude/skills/SKILLS-OVERVIEW.md` dosyasında belgelidir.

@@ -9,6 +9,7 @@
 
 - `../project-config.md` → Naming convention, dizin yapisi, katman kurallari
 - `../ui-testing/test-structure.md` → pytest class yapisi, setup fixture, marker kurallari
+- `../ui-testing/flows-layer.md` → Cross-page navigasyon; test birden fazla sayfayi kapsiyorsa SiteFlow'dan gecmeli
 - `references/istqb-principles.md` → Test tasarim teknikleri
 - `references/test-strategy.md` → Smoke/regression stratejisi, mevcut test kapsamı
 
@@ -111,6 +112,7 @@ grep -n "locator_key" ui_tests/locators/*.py
 ```
 
 Yoksa: `/Insider-locator-extract` ile once locator olusturulmasi gerektigini bildir.
+Page Object sinifi da yoksa: once `/Insider-page-add` calistir, sonra buraya don.
 
 ---
 

@@ -120,6 +120,9 @@ careersPage_departmentFilter_dropdown = Locator(By.CSS_SELECTOR, "[data-select='
 careersPage_jobCards_list            = Locator(By.CSS_SELECTOR, ".position-list-item")
 ```
 
+**Sonraki adim**: Yeni sayfa icin locator uretildiyse → `/Insider-page-add` ile Page Object sinifini olustur.
+Mevcut sayfaya locator eklendiyse → dogrudan `/Insider-scenario-generate` veya `/Insider-test-fix` ile devam et.
+
 ---
 
 ## Onemli Kurallar

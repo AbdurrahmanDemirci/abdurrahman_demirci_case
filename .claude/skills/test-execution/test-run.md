@@ -150,3 +150,11 @@ allure generate automation-test-results/ui/allure-results/ -o automation-test-re
 3. **Screenshot on failure** — `conftest.py`'deki hook otomatik kaydeder (`automation-test-results/screenshots/`)
 4. **Reruns normal** — `--reruns=2` flaky korumasi icin, ama 3 denemede de fail ise gercek sorun var
 5. **`allure serve` sadece lokal** — CI'da `allure generate` kullan
+
+## Sonraki Adim
+
+| Sonuc | Sonraki Skill |
+|-------|--------------|
+| Fail var | `/Insider-test-fix` ile kok neden analizi yap |
+| Tum testler pass | `/Insider-report-analyze` ile kosu dokumante et |
+| Commit hazir | `/Insider-code-clean` → `/Insider-commit` |

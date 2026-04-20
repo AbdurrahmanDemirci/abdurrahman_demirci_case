@@ -117,6 +117,21 @@ insiderone2/
 │   │   └── test_pet_negative.py
 │   ├── conftest.py             ← client (session), created_pet (teardown fixture)
 │   └── config.py               ← API_BASE_URL, API_TIMEOUT (.env'den okunur)
+├── load_tests/
+│   ├── locustfile.py           ← Giriş noktası (sadece import, senaryo kodu yok)
+│   ├── config.py               ← Ortam, eşik değerleri, think time, URL'ler
+│   ├── data/
+│   │   └── search_data.py      ← POPULAR_QUERIES, TECH_QUERIES, EDGE_CASE_QUERIES
+│   ├── scenarios/
+│   │   ├── __init__.py         ← Tüm HttpUser sınıflarını kayıt eder
+│   │   ├── product_search.py   ← ProductSearchUser (weight=3)
+│   │   ├── category_search.py  ← CategorySearchUser (weight=1)
+│   │   └── user_journey.py     ← UserJourneyUser (weight=1, SequentialTaskSet)
+│   └── utils/
+│       ├── base_task_set.py    ← BaseTaskSet: on_start/on_stop (try/except ile)
+│       ├── logger.py           ← Bağımsız logger (root utils/ ile sys.path çakışması önler)
+│       └── response_validator.py ← P95 kontrol + HTTP/body validasyon fonksiyonları
+├── locust.conf                 ← Locust CLI varsayılanları (1 user, 60s, INFO log)
 ├── Makefile                    ← Kısa komutlar
 ├── pytest.ini
 └── requirements.txt

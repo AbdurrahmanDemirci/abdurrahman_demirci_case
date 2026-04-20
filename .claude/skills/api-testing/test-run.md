@@ -164,3 +164,11 @@ allure generate automation-test-results/api/allure-results --clean -o automation
 3. **Fixture sorununu once coz** — `created_pet` fail → tum bag test'ler skip olur; once temel CRUD duzelt
 4. **Public API bilinci** — `petstore.swagger.io` public; baska takim test verileri biriktirebilir, `INVALID_PET_ID = 999_999_999_999` bunu yonetir
 5. **`-p no:rerunfailures`** — Debug sirasinda kesin hata gormek icin rerun'i kapat
+
+## Sonraki Adim
+
+| Sonuc | Sonraki Skill |
+|-------|--------------|
+| Fail var | `/Insider-api-test-fix` ile kok neden analizi yap |
+| Tum testler pass | `/Insider-report-analyze` ile kosu dokumante et |
+| Commit hazir | `/Insider-code-clean` → `/Insider-commit` |

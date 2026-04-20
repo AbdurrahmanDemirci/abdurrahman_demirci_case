@@ -145,6 +145,46 @@ btn1, acceptButton, COOKIE_BTN, careers_filter
 
 ---
 
+## Adim 2c: Load Test Katman Kurallari (`load_tests/**`)
+
+### Kural L1: Senaryo Dosyasinda Hardcoded URL/String Yasak
+
+`load_tests/scenarios/**` icinde inline URL veya arama terimi OLMAMALI:
+
+```python
+# YANLIS — senaryo icinde:
+resp = self.client.get("/arama?q=laptop")
+
+# DOGRU:
+from load_tests.data.search_data import POPULAR_QUERIES
+query = random.choice(POPULAR_QUERIES)
+resp = self.client.get(f"/arama", params={"q": query})
+```
+
+### Kural L2: Senaryo Dosyasinda Inline Validasyon Yasak
+
+`load_tests/scenarios/**` icinde `if resp.status_code != 200` gibi inline kontrol OLMAMALI:
+
+```python
+# YANLIS:
+if resp.status_code != 200:
+    resp.failure(...)
+
+# DOGRU:
+from load_tests.utils.response_validator import validate_search_response
+validate_search_response(resp)
+```
+
+### Kural L3: locustfile.py'e Senaryo Kodu Eklenmez
+
+`load_tests/locustfile.py` sadece import icermeli. Task veya user logic buraya gelmez.
+
+### Kural L4: config.py Salt Okunur
+
+`load_tests/config.py` sadece import edilir, degistirilmez. Ortam degeri → `.env` uzerinden degistir.
+
+---
+
 ## Adim 2b: API Katman Kurallari (`api_tests/**`)
 
 ### Kural A: client/ icinde raw HTTP yasak
@@ -252,3 +292,7 @@ Semboller:
 4. **Otomatik duzeltme**: trailing whitespace, end-of-file newline, flake8 E302/E303 → otomatik duzelt
 5. **Manuel mudahale gerektiren**: katman ihlali, assertion sabiti — raporla, kullaniciya birak
 6. **Format degisikligi ayri commit OLMAZ** — diger degisikliklerle birlikte commit edilir
+
+## Sonraki Adim
+
+Bu kontrol sorunsuz tamamlandiysa → `/Insider-commit` ile commit at.
