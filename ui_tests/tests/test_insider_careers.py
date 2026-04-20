@@ -8,6 +8,7 @@ from ui_tests.data.expected_content import (
     EXPECTED_JOB_DEPARTMENT,
     EXPECTED_JOB_POSITION_KEYWORDS,
     EXPECTED_JOB_LOCATION,
+    EXPECTED_LEVER_APPLY_URL_FRAGMENT,
 )
 
 
@@ -78,4 +79,20 @@ class TestInsiderCareers:
         )
         assert EXPECTED_JOB_LOCATION in first["location"], (
             f"Location '{first['location']}' does not contain '{EXPECTED_JOB_LOCATION}'"
+        )
+
+    @pytest.mark.smoke
+    @pytest.mark.regression
+    def test_05_apply_button_redirects_to_lever_form(self):
+        """
+        Step 5: Click the 'Apply' button on the first QA job listing
+        and verify the browser redirects to the Lever application form.
+        """
+        job_page = self.flow.navigate_to_qa_jobs(self.home)
+
+        job_page.click_first_apply_button()
+
+        assert EXPECTED_LEVER_APPLY_URL_FRAGMENT in job_page.get_current_url(), (
+            f"Expected Lever apply form URL containing '{EXPECTED_LEVER_APPLY_URL_FRAGMENT}', "
+            f"got: {job_page.get_current_url()}"
         )
