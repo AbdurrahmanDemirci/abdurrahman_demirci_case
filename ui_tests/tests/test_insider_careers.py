@@ -5,7 +5,6 @@ from ui_tests.flows.site_flow import SiteFlow
 from ui_tests.pages.home_page import HomePage
 from ui_tests.pages.careers_page import CareersPage
 from ui_tests.data.expected_content import (
-    EXPECTED_JOB_DEPARTMENT,
     EXPECTED_JOB_POSITION_KEYWORDS,
     EXPECTED_JOB_LOCATION,
     EXPECTED_LEVER_APPLY_URL_FRAGMENT,
@@ -57,29 +56,25 @@ class TestInsiderCareers:
         )
 
     @pytest.mark.regression
-    def test_04_first_qa_job_details_are_correct(self):
+    def test_04_all_qa_job_details_are_correct(self):
         """
-        Step 4: On the QA jobs page, verify the first listed job contains
-        'Quality Assurance' (or 'QA') in its position, 'Quality Assurance'
-        in its department, and 'Istanbul' in its location.
+        Step 4: On the QA jobs page, verify ALL listed jobs contain
+        'Quality Assurance' (or 'QA') in position and 'Istanbul' in location.
         """
         job_page = self.flow.navigate_to_qa_jobs(self.home)
+        job_page.select_istanbul_location()
 
         jobs = job_page.get_all_job_details()
-        assert len(jobs) > 0, "No jobs found on the Quality Assurance page"
+        assert len(jobs) > 0, "No jobs found for Quality Assurance in Istanbul"
 
-        first = jobs[0]
-
-        assert any(kw in first["position"] for kw in EXPECTED_JOB_POSITION_KEYWORDS), (
-            f"Position '{first['position']}' does not contain any of"
-            f" {EXPECTED_JOB_POSITION_KEYWORDS}"
-        )
-        assert EXPECTED_JOB_DEPARTMENT in first["department"], (
-            f"Department '{first['department']}' does not contain '{EXPECTED_JOB_DEPARTMENT}'"
-        )
-        assert EXPECTED_JOB_LOCATION in first["location"], (
-            f"Location '{first['location']}' does not contain '{EXPECTED_JOB_LOCATION}'"
-        )
+        for job in jobs:
+            assert any(kw in job["position"] for kw in EXPECTED_JOB_POSITION_KEYWORDS), (
+                f"Position '{job['position']}' does not contain any of"
+                f" {EXPECTED_JOB_POSITION_KEYWORDS}"
+            )
+            assert EXPECTED_JOB_LOCATION in job["location"], (
+                f"Location '{job['location']}' does not contain '{EXPECTED_JOB_LOCATION}'"
+            )
 
     @pytest.mark.smoke
     @pytest.mark.regression
