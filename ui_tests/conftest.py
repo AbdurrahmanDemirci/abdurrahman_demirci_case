@@ -1,8 +1,10 @@
 import re
+from collections.abc import Generator
 from datetime import datetime
 
 import allure
 import pytest
+from selenium import webdriver
 
 from ui_tests.utils.driver_factory import create_driver
 
@@ -30,7 +32,7 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture
-def driver(request):
+def driver(request: pytest.FixtureRequest) -> Generator[webdriver.Remote, None, None]:
     browser = request.param
     headless_opt = request.config.getoption("--headless")
     headless = headless_opt.lower() == "true" if headless_opt is not None else None
