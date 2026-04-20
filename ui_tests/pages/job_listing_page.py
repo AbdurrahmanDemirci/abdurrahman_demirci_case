@@ -23,6 +23,13 @@ class JobListingPage(BasePage):
         except Exception:
             return False
 
+    def select_istanbul_location(self) -> None:
+        current_url = self.get_current_url().split("&location=")[0]
+        self.driver.get(f"{current_url}&location=Istanbul")
+        WebDriverWait(self.driver, EXPLICIT_WAIT).until(
+            EC.presence_of_element_located(L.leverPage_jobItems_list)
+        )
+
     def click_first_apply_button(self) -> None:
         """Two-step Lever flow: listing Apply → job detail → Apply for this job → form."""
         self._click(L.leverPage_applyBtn)
