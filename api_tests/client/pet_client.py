@@ -1,32 +1,21 @@
 import requests
 
-from api_tests.config import BASE_URL, TIMEOUT
+from api_tests.api.base_api import BaseAPI
 
 
-class PetClient:
-
-    def __init__(self) -> None:
-        self.session = requests.Session()
-        self.session.headers.update({
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        })
+class PetClient(BaseAPI):
 
     def create(self, payload: dict | None) -> requests.Response:
-        return self.session.post(f"{BASE_URL}/pet", json=payload, timeout=TIMEOUT)
+        return self._post("/pet", json=payload)
 
     def get_by_id(self, pet_id: int | str) -> requests.Response:
-        return self.session.get(f"{BASE_URL}/pet/{pet_id}", timeout=TIMEOUT)
+        return self._get(f"/pet/{pet_id}")
 
     def find_by_status(self, status: str) -> requests.Response:
-        return self.session.get(
-            f"{BASE_URL}/pet/findByStatus",
-            params={"status": status},
-            timeout=TIMEOUT,
-        )
+        return self._get("/pet/findByStatus", params={"status": status})
 
     def update(self, payload: dict) -> requests.Response:
-        return self.session.put(f"{BASE_URL}/pet", json=payload, timeout=TIMEOUT)
+        return self._put("/pet", json=payload)
 
     def delete(self, pet_id: int) -> requests.Response:
-        return self.session.delete(f"{BASE_URL}/pet/{pet_id}", timeout=TIMEOUT)
+        return self._delete(f"/pet/{pet_id}")

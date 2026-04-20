@@ -1,7 +1,7 @@
 import pytest
 
 from api_tests.client.pet_client import PetClient
-from api_tests.data.pet_data import build_pet
+from api_tests.models.pet_model import PetBuilder
 
 
 @pytest.fixture(scope="session")
@@ -11,7 +11,7 @@ def client() -> PetClient:
 
 @pytest.fixture
 def created_pet(client: PetClient) -> dict:
-    payload = build_pet()
+    payload = PetBuilder.full()
     resp = client.create(payload)
     assert resp.status_code == 200, f"Pet creation failed: {resp.text}"
     pet = resp.json()
