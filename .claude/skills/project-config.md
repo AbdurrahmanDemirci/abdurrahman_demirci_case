@@ -189,18 +189,30 @@ test_NN_açıklama
 
 ## Ortam Değişkenleri (.env)
 
-| Değişken | Varsayılan | Açıklama |
-|----------|-----------|----------|
-| `BASE_URL` | `https://insiderone.com` | UI test hedef URL |
-| `BROWSER` | `chrome` | Varsayılan browser (chrome / firefox) |
-| `HEADLESS` | `false` | Headless mod |
-| `EXPLICIT_WAIT` | `30` | Selenium bekleme süresi (saniye) |
-| `API_BASE_URL` | `https://petstore.swagger.io/v2` | API test hedef URL |
-| `API_TIMEOUT` | `10` | HTTP request timeout (saniye) |
-| `LOAD_TEST_ENV` | `production` | Load test ortamı (production / staging / local) |
-| `P95_THRESHOLD_MS` | `3000` | P95 yanıt süresi uyarı eşiği (ms) |
-| `THINK_TIME_MIN` | `2` | Locust minimum think time (saniye) |
-| `THINK_TIME_MAX` | `5` | Locust maksimum think time (saniye) |
+> **Kural:** Tüm değişkenler **zorunludur** — `.env` dosyasında eksik olan her değişken `None` döner ve test başlamadan crash eder.
+> Config dosyalarında hiçbir `os.getenv("KEY", default)` kullanılmaz; tek kaynak `.env`'dir.
+
+| Değişken | Zorunlu | Örnek Değer | Açıklama |
+|----------|:-------:|-------------|----------|
+| `BASE_URL` | ✅ | `https://insiderone.com` | UI test hedef URL |
+| `BROWSER` | ✅ | `chrome` | Browser seçimi (`chrome` / `firefox`) |
+| `HEADLESS` | ✅ | `false` | Headless mod (`true` / `false`) |
+| `EXPLICIT_WAIT` | ✅ | `30` | Selenium explicit wait (saniye, int) |
+| `API_BASE_URL` | ✅ | `https://petstore.swagger.io/v2` | API test hedef URL |
+| `API_TIMEOUT` | ✅ | `10` | HTTP request timeout (saniye, int) |
+| `LOAD_TEST_ENV` | ✅ | `production` | Load test ortamı (`production` / `staging` / `local`) |
+| `MIN_RESPONSE_BODY_SIZE` | ✅ | `500` | Minimum response body boyutu (byte, int) |
+| `P95_THRESHOLD_MS` | ✅ | `3000` | P95 yanıt süresi uyarı eşiği (ms, int) |
+| `THINK_TIME_MIN` | ✅ | `2` | Locust minimum think time (saniye, float) |
+| `THINK_TIME_MAX` | ✅ | `5` | Locust maksimum think time (saniye, float) |
+
+### Yeni Değişken Ekleme Kuralı
+
+Yeni bir `os.getenv` çağrısı eklenirse:
+1. `.env` dosyasına değeri ekle
+2. `.env.example` dosyasına placeholder ekle (`KEY=`)
+3. Bu tabloya satır ekle
+4. İlgili `config.py`'de **default vermeden** `os.getenv("KEY")` kullan
 
 ---
 
