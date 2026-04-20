@@ -3,9 +3,9 @@
 .claude/settings.local.json
 
 # ── Secrets & environment ────────────────────────────────────────────────────
-.env
 *.env
 .env.*
+!.env
 !.env.example
 
 # ── Python bytecode & cache ───────────────────────────────────────────────────
