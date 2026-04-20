@@ -22,7 +22,7 @@ ENVIRONMENTS = {
     "local":      "http://localhost:3000",
 }
 
-TARGET_ENV = os.getenv("LOAD_TEST_ENV", "production")
+TARGET_ENV = os.getenv("LOAD_TEST_ENV")
 BASE_URL    = ENVIRONMENTS[TARGET_ENV]
 
 # ---------------------------------------------------------------------------
@@ -50,10 +50,10 @@ CATEGORY_SLUGS = [
 # Performance thresholds (env-configurable)
 # ---------------------------------------------------------------------------
 MIN_RESPONSE_BODY_SIZE = 500
-RESPONSE_TIME_P95_MS   = int(os.getenv("P95_THRESHOLD_MS", "3000"))
+RESPONSE_TIME_P95_MS   = int(os.getenv("P95_THRESHOLD_MS"))
 
 # ---------------------------------------------------------------------------
 # Think time (env-configurable)
 # ---------------------------------------------------------------------------
-THINK_TIME_MIN = float(os.getenv("THINK_TIME_MIN", "2.0"))
-THINK_TIME_MAX = float(os.getenv("THINK_TIME_MAX", "5.0"))
+THINK_TIME_MIN = float(os.getenv("THINK_TIME_MIN"))
+THINK_TIME_MAX = float(os.getenv("THINK_TIME_MAX"))
