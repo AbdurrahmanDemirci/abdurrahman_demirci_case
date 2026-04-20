@@ -1,7 +1,9 @@
 # Commit — Conventional Commits Standartinda Git Commit Skill'i
 
-> **Slash Komutu**: `/commit`
+> **Slash Komutu**: `/Insider-commit`
 > **Amac**: Degisiklikleri analiz eder, Conventional Commits standardina uygun mesajlarla commit atar.
+
+> ⚠️ **Onkosul**: Commit atmadan once `/Insider-code-clean` calistir — flake8 ve mimari kural ihlali varsa once duzelt, sonra commit at.
 
 ---
 

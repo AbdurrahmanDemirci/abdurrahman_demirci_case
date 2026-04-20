@@ -39,7 +39,7 @@ assert 200 in (400, 404, 405)
 3. Gercek response'u incele: `resp.text` mesajina bak (stack trace'de varsa)
 4. Karar matrisi:
    - Beklenti yanlis, API dogru → testi guncelle (yeni status kodu ekle veya degistir)
-   - API yanlis, beklenti dogru → Bug raporu yaz (`/Insider-api-bug-report`)
+   - API yanlis, beklenti dogru → Bug raporu yaz (`/Insider-bug-report`)
    - Petstore quirk (belgelenmis) → yorumu guncelle, beklentiyi genislet
 5. Fix: `assert resp.status_code in (400, 404)` gibi genisletilmis beklenti ekle
 
