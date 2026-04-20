@@ -18,6 +18,7 @@ locust==2.32.3
 
 # --- API Testing ---
 requests==2.32.3
+jsonschema==4.23.0
 
 # --- Utilities ---
 python-dotenv==1.0.1
