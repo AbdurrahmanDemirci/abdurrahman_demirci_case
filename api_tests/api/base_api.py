@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import requests
 
@@ -18,28 +19,28 @@ class BaseAPI:
             "Accept": "application/json",
         })
 
-    def _get(self, path: str, **kwargs) -> requests.Response:
+    def _get(self, path: str, **kwargs: Any) -> requests.Response:
         url = f"{self.base_url}{path}"
         logger.info("GET %s", url)
         resp = self.session.get(url, timeout=self.timeout, **kwargs)
         logger.info("← %d %s", resp.status_code, url)
         return resp
 
-    def _post(self, path: str, **kwargs) -> requests.Response:
+    def _post(self, path: str, **kwargs: Any) -> requests.Response:
         url = f"{self.base_url}{path}"
         logger.info("POST %s", url)
         resp = self.session.post(url, timeout=self.timeout, **kwargs)
         logger.info("← %d %s", resp.status_code, url)
         return resp
 
-    def _put(self, path: str, **kwargs) -> requests.Response:
+    def _put(self, path: str, **kwargs: Any) -> requests.Response:
         url = f"{self.base_url}{path}"
         logger.info("PUT %s", url)
         resp = self.session.put(url, timeout=self.timeout, **kwargs)
         logger.info("← %d %s", resp.status_code, url)
         return resp
 
-    def _delete(self, path: str, **kwargs) -> requests.Response:
+    def _delete(self, path: str, **kwargs: Any) -> requests.Response:
         url = f"{self.base_url}{path}"
         logger.info("DELETE %s", url)
         resp = self.session.delete(url, timeout=self.timeout, **kwargs)
